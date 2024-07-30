@@ -17,6 +17,13 @@ function Statistics() {
             </div>
             <div className='content'>
                 {/* <h2>Dashboard</h2> */}
+                    <div className='exam-link-container'>
+                        <Link to="/historico" className="no-link-style">
+                            <div className='exam dashboard-link'>
+                                Simulado realizado em 30/07/2024
+                            </div>
+                        </Link>
+                    </div>
                 <div className='card-container'>
                     <div className='welcome-card'>
                         <p className='welcome-message'>

@@ -57,6 +57,10 @@
 
   .logout {
     position: absolute;
-    bottom: 20%;
+    bottom: 10%;
     margin-left: -15px;
+  }
+
+  .home-icon {
+    margin-bottom: 2rem;
   }

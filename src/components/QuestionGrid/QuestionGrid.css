@@ -91,8 +91,10 @@
 }
 
 .toggle-square {
-    background-color: #ccc; /* Gray background */
-    color: #000; /* Black text */
+    background-color: #ddd;
+    font-size: 30px;
+    font-family: "Space Mono", monospace;
+    color: var(--font-color); 
 }
 
 .question-box-container {
@@ -201,7 +203,7 @@
 
 .question-sidebar {
     background-color: var(--card-color);
-    width: 45%;
+    width: 40%;
     font-size: 1.5em;
     display: flex;
     justify-content: center;

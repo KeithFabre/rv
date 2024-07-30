@@ -73,3 +73,14 @@ span.highlight-text {
     font-family: "Space Mono", monospace;
     font-weight: 700;
 }
+
+.exam-link-container {
+    width: 90%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.exam.dashboard-link {
+    font-family: "Space Mono", monospace;
+    font-weight: 700;
+}
