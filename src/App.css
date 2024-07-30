@@ -12,6 +12,7 @@
     --disabled-button-color: #e0e0e0;
     --card-radius: 10px;
     --items-radius: 5px;
+    --card-hover: 0 0 0 4px #5fbec4 inset;
     /* font-sizes */
 }
 

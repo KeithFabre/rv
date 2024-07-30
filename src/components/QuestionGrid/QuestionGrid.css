@@ -8,6 +8,12 @@
     margin-bottom: 2rem;
 }
 
+.question-buttons {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
 .exam-selector {
     width: 100%;
     display: flex;
@@ -23,6 +29,24 @@
     box-shadow: 0 0 0 2px var(--font-color) inset;
     background-color: var(--card-color);
     border-radius: var(--items-radius);
+}
+
+.sort-selector {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    font-family: "Space Mono", monospace;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.sort {
+    padding: 10px 15px 10px 15px;
+    margin: 0 10px 10px 0;
+    box-shadow: 0 0 0 2px var(--font-color) inset;
+    background-color: var(--card-color);
+    border-radius: var(--items-radius);
+    cursor: pointer;
 }
 
 .grid-container {
@@ -54,30 +78,31 @@
     font-size: 1.4rem;
 }
 
-.square.correct::after {
-    content: '';
-    color: var(--details-color);
+.square::after {
+    content: 'BIO';
     position: absolute;
-    top: -2px;
+    top: 2px;
     left: 5px;
-    font-size: 15px;
+    font-size: 12px;
+    font-weight: 700;
+
 }
 
 .square.correct {
     box-shadow: 0 0 0 2px #5faa5f inset;
 }
 
-.square.incorrect::after {
-    content: '';
-    color: var(--font-color);
-    position: absolute;
-    top: -2px;
-    left: 5px;
-    font-size: 15px;
+.square.correct::after {
+    color: #5faa5f;
 }
+
 
 .square.incorrect {
     box-shadow: 0 0 0 2px #ff6767 inset;
+}
+
+.square.incorrect::after {
+    color: #ff6767;
 }
 
 .square.correct:hover,
@@ -95,6 +120,10 @@
     font-size: 30px;
     font-family: "Space Mono", monospace;
     color: var(--font-color); 
+}
+
+.toggle-square::after {
+    content: '';
 }
 
 .question-box-container {
@@ -215,3 +244,4 @@
     font-weight: 700;
     font-size: 1.3rem;
 }
+

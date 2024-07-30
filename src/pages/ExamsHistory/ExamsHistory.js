@@ -90,7 +90,7 @@ function ExamHistory() {
                     </div>
                 </Link>
 
-                <Link to="/" className="no-link-style">
+                {/* <Link to="/" className="no-link-style">
                     <div className='exam-history'>
                         <div className='exam-date'>Simulado realizado em 30/07/2024</div>
                         <div className='exam-grades'>
@@ -128,7 +128,7 @@ function ExamHistory() {
                             </div>
                         </div>
                     </div>
-                </Link>
+                </Link> */}
             </div>
         </div>
     );

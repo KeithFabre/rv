@@ -6,29 +6,30 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
-    /* column-gap: 0px;
-    row-gap: -40px */
+    gap: 2rem;
 }
 
 .exam-history {
     background-color: var(--card-color);
     display: flex;
     flex-direction: column;
-    width: 500px; 
+    justify-content: center;
+    width: 600px; 
+    height: 90px;
     margin: 0 15px -20px 15px; 
-    /* margin-bottom: -50px; */
     padding: 20px;
     border-radius: var(--card-radius);
 }
 
 .exam-history:hover {
-    box-shadow: 0 0 0 2px var(--font-color) inset;
+    box-shadow: var(--card-hover)
 }
 
 .exam-date {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-family: "Space Mono", monospace;
     font-weight: 700;
 }
@@ -39,7 +40,8 @@
     justify-content: center;
     text-align: center;
     font-family: "Space Mono", monospace;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    margin-top: -1rem;
 }
 
 .exam-grade {

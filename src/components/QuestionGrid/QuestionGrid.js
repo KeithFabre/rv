@@ -8,6 +8,7 @@ function QuestionGrid() {
     const [alternatives, setAlternatives] = useState([]);
     const [selectedAlternatives, setSelectedAlternatives] = useState([]);
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [sortOrder, setSortOrder] = useState('chronological');
 
     const location = useLocation();
     const expandedExam = location.state?.expandedExam || 'CH';
@@ -86,58 +87,91 @@ function QuestionGrid() {
         window.location.reload(); // Reload the page
     };
 
+    const handleSortChange = (order) => {
+        setSortOrder(order);
+    };
+
+    const getSortedQuestions = () => {
+        const questions = questionStatus.map((status, index) => ({
+            index,
+            status,
+        }));
+
+        if (sortOrder === 'chronological') {
+            return questions;
+        } else if (sortOrder === 'correct-first') {
+            return questions.sort((a, b) => (a.status === 'correct' ? -1 : 1));
+        } else if (sortOrder === 'wrong-first') {
+            return questions.sort((a, b) => (a.status === 'incorrect' ? -1 : 1));
+        }
+
+        return questions;
+    };
+
+    const sortedQuestions = getSortedQuestions();
+
     return (
         <div className="questions-container">
 
-            {/* navegação pra escolher prova */}
-            <div className='exam-selector'>
-                <Link to="/detalhes" state={{ expandedExam: 'CH' }} className="no-link-style" onClick={handleLinkClick}>
-                    <div className='exam'>{expandedExam === 'CH' ? 'Ciências Humanas e suas Tecnologias' : 'CH'}</div>
-                </Link>
-                <Link to="/detalhes" state={{ expandedExam: 'CN' }} className="no-link-style" onClick={handleLinkClick}>
-                    <div className='exam'>{expandedExam === 'CN' ? 'Ciências da Natureza e suas Tecnologias' : 'CN'}</div>
-                </Link>
-                <Link to="/detalhes" state={{ expandedExam: 'LC' }} className="no-link-style" onClick={handleLinkClick}>
-                    <div className='exam'>{expandedExam === 'LC' ? 'Linguagens, Códigos e suas Tecnologias' : 'LC'}</div>
-                </Link>
-                <Link to="/detalhes" state={{ expandedExam: 'MT' }} className="no-link-style" onClick={handleLinkClick}>
-                    <div className='exam'>{expandedExam === 'MT' ? 'Matemática e suas Tecnologias' : 'MT'}</div>
-                </Link>
-                <Link to="/detalhes" state={{ expandedExam: 'R' }} className="no-link-style" onClick={handleLinkClick}>
-                    <div className='exam'>{expandedExam === 'R' ? 'Redação' : 'R'}</div>
-                </Link>
-            </div>
-
-            <div className="grid-container">
-
-
-                {/* grid de questões (CH, CN, LC, MT) */}
+            <div className='question-buttons'>
+                {/* navegação pra escolher prova */}
+                <div className='exam-selector'>
+                    <Link to="/detalhes" state={{ expandedExam: 'CH' }} className="no-link-style" onClick={handleLinkClick}>
+                        <div className='exam'>{expandedExam === 'CH' ? 'Ciências Humanas e suas Tecnologias' : 'CH'}</div>
+                    </Link>
+                    <Link to="/detalhes" state={{ expandedExam: 'CN' }} className="no-link-style" onClick={handleLinkClick}>
+                        <div className='exam'>{expandedExam === 'CN' ? 'Ciências da Natureza e suas Tecnologias' : 'CN'}</div>
+                    </Link>
+                    <Link to="/detalhes" state={{ expandedExam: 'LC' }} className="no-link-style" onClick={handleLinkClick}>
+                        <div className='exam'>{expandedExam === 'LC' ? 'Linguagens, Códigos e suas Tecnologias' : 'LC'}</div>
+                    </Link>
+                    <Link to="/detalhes" state={{ expandedExam: 'MT' }} className="no-link-style" onClick={handleLinkClick}>
+                        <div className='exam'>{expandedExam === 'MT' ? 'Matemática e suas Tecnologias' : 'MT'}</div>
+                    </Link>
+                    <Link to="/detalhes" state={{ expandedExam: 'R' }} className="no-link-style" onClick={handleLinkClick}>
+                        <div className='exam'>{expandedExam === 'R' ? 'Redação' : 'R'}</div>
+                    </Link>
+                </div>
 
                 {expandedExam !== 'R' ? (
-                <div className="grid">
-                {questionStatus.map((status, index) => (
-                    (!isCollapsed || selectedQuestion === index) && (
-                        <div
-                            key={index}
-                            className={`square ${status} ${selectedQuestion === index ? 'selected' : ''}`}
-                            onClick={() => handleQuestionClick(index)}
-                        >
-                            {index + 1}
-                        </div>
-                    )
-                ))}
-                {selectedQuestion !== null && (
-                    <div
-                        className="square toggle-square"
-                        onClick={toggleCollapse}
-                    >
-                        {isCollapsed ? '+' : '-'}
+                    <div className="sort-selector">
+                        <div className='sort' onClick={() => handleSortChange('chronological')}>1-45</div>
+                        <div className='sort' onClick={() => handleSortChange('correct-first')}>Corretas</div>
+                        <div className='sort' onClick={() => handleSortChange('wrong-first')}>Erradas</div>
                     </div>
-                )}
-            </div>
                 ) : null}
+
+
+            </div>
+
+
+            <div className="grid-container">
                 
 
+                {/* grid de questões (CH, CN, LC, MT) */}
+                {expandedExam !== 'R' ? (
+                    <div className="grid">
+                        {sortedQuestions.map(({ index, status }) => (
+                            (!isCollapsed || selectedQuestion === index) && (
+                                <div
+                                    key={index}
+                                    className={`square ${status} ${selectedQuestion === index ? 'selected' : ''}`}
+                                    onClick={() => handleQuestionClick(index)}
+                                >
+                                    {index + 1}
+                                </div>
+                            )
+                        ))}
+                        {selectedQuestion !== null && (
+                            <div
+                                className="square toggle-square"
+                                onClick={toggleCollapse}
+                            >
+                                {isCollapsed ? '+' : '-'}
+                            </div>
+                        )}
+                    </div>
+                ) : null}
 
                 {/* detalhes da questão (todas) */}
                 {(selectedQuestion !== null) && (
@@ -149,13 +183,9 @@ function QuestionGrid() {
                         </div>
                     </div>
                 )}
-
-
-
             </div>
 
-
-                {/* corpo da questão com alternativas (CH, CN, LC, MT) */}
+            {/* corpo da questão com alternativas (CH, CN, LC, MT) */}
             <div>
                 {selectedQuestion !== null && (
                     <div className="question-box-container">
@@ -197,8 +227,8 @@ function QuestionGrid() {
             </div>
 
             <div className='essay-corrected'>
-            {expandedExam === 'R' ? (
-                        <div className="question-box-container">
+                {expandedExam === 'R' ? (
+                    <div className="question-box-container">
                         <div className="question-box">
                             <p className='question-title'>
                                 Redação Corrigida
@@ -209,12 +239,9 @@ function QuestionGrid() {
                                 Maecenas convallis, erat in luctus convallis, arcu purus fringilla est, nec fermentum orci urna vel nulla. Morbi tincidunt, urna nec commodo vulputate, nisi nunc commodo libero, vel lacinia elit metus et quam. Phasellus ac magna ut erat ultrices efficitur. Nullam fermentum massa sed nunc fringilla, nec lacinia turpis dictum.
                             </p>
                         </div>
-                        </div>
+                    </div>
                 ) : null}
             </div>
-
-
-
         </div>
     );
 }
