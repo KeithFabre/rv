@@ -5,7 +5,7 @@ import QuestionGrid from '../../components/QuestionGrid/QuestionGrid';
 
 function ExamDetails() {
     const location = useLocation();
-    const expandedExam = location.state?.expandedExam || null;
+    // const expandedExam = location.state?.expandedExam || null;
 
     return (
         <div className='page-container'>

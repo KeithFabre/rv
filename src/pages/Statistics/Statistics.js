@@ -31,35 +31,35 @@ function Statistics() {
                 <div className='card-container'>
                     <Link 
                         to="/detalhes"
-                        state={{ expandedExam: 'C. H. T.' }}
+                        state={{ expandedExam: 'CH' }}
                         className="no-link-style"
                     >
                         <Card title="Ciências Humanas e suas Tecnologias" info="694,6" icon="groups"/>
                     </Link>
                     <Link 
                         to="/detalhes"
-                        state={{ expandedExam: 'C. N. T.' }}
+                        state={{ expandedExam: 'CN' }}
                         className="no-link-style"
                     >
                         <Card title="Ciências da Natureza e suas Tecnologias" info="712,4" icon="bio"/>
                     </Link>
                     <Link 
                         to="/detalhes"
-                        state={{ expandedExam: 'L. C. T.' }}
+                        state={{ expandedExam: 'LC' }}
                         className="no-link-style"
                     >
                         <Card title="Linguagens, Códigos e suas Tecnologias" info="650,1" icon="chat"/>
                     </Link>
                     <Link 
                         to="/detalhes"
-                        state={{ expandedExam: 'M. T.' }}
+                        state={{ expandedExam: 'MT' }}
                         className="no-link-style"
                     >
                         <Card title="Matemática e suas Tecnologias" info="779,8" icon="functions"/>
                     </Link>
                     <Link 
                         to="/detalhes"
-                        state={{ expandedExam: 'R.' }}
+                        state={{ expandedExam: 'R' }}
                         className="no-link-style"
                     >
                         <Card title="Redação" info="960,0" icon="create"/>
