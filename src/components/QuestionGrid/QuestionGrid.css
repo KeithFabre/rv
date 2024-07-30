@@ -1,0 +1,215 @@
+.questions-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 2rem;
+}
+
+.exam-selector {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    font-family: "Space Mono", monospace;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.exam {
+    padding: 10px 15px 10px 15px;
+    margin: 0 10px 10px 0;
+    box-shadow: 0 0 0 2px var(--font-color) inset;
+    background-color: var(--card-color);
+    border-radius: var(--items-radius);
+}
+
+.grid-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 15px;
+    width: 50%;
+    margin-bottom: 20px;
+}
+
+.square {
+    width: 60px;
+    height: 60px;
+    background-color: var(--card-color);
+    color: var(--font-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: var(--items-radius);
+    position: relative;
+    box-shadow: none;
+    font-size: 1.4rem;
+}
+
+.square.correct::after {
+    content: '';
+    color: var(--details-color);
+    position: absolute;
+    top: -2px;
+    left: 5px;
+    font-size: 15px;
+}
+
+.square.correct {
+    box-shadow: 0 0 0 2px #5faa5f inset;
+}
+
+.square.incorrect::after {
+    content: '';
+    color: var(--font-color);
+    position: absolute;
+    top: -2px;
+    left: 5px;
+    font-size: 15px;
+}
+
+.square.incorrect {
+    box-shadow: 0 0 0 2px #ff6767 inset;
+}
+
+.square.correct:hover,
+.square.correct.selected {
+    background-color: rgba(109, 169, 109, 20%);
+}
+
+.square.incorrect:hover,
+.square.incorrect.selected {
+    background-color: rgba(255, 103, 103, 20%);
+}
+
+.toggle-square {
+    background-color: #ccc; /* Gray background */
+    color: #000; /* Black text */
+}
+
+.question-box-container {
+    width: 100%;
+}
+
+.question-box {
+    padding: 20px;
+    background-color: var(--card-color);
+    border-radius: var(--card-radius);
+    width: 50%;
+    margin-top: 20px;
+    font-size: 1.1em;
+}
+
+.question-box p.question-status {
+    float: right;
+    font-size: 1em;
+}
+
+.question-title {
+    font-family: "Space Mono", monospace;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+.question-body {
+    text-align: justify;
+}
+
+.alternatives {
+    margin-top: 20px;
+}
+
+.alternative {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.radio-alternative {
+    display: flex;
+    align-items: center;
+    border-radius: var(--items-radius);
+    padding: 0 5px 8px 5px; 
+    background-color: var(--disabled-button-color);
+    color: #fff;
+    font-weight: 700;   
+}
+
+.radio-alternative.correct {
+    background-color: #5faa5f; 
+    font-weight: 700;
+    color: #fff;
+}
+
+.radio-alternative.wrong {
+    background-color: #ff6767; 
+    font-weight: 700;
+    color: #fff;
+}
+
+.alternative-input {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    -webkit-appearance: none; 
+    appearance: none; 
+    background-color: #fff; 
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+.alternative-input:checked::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background-color: var(--second-color); 
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.alternative label {
+    font-size: 1.1rem;
+    vertical-align: middle; 
+    margin-left: 10px; 
+    margin-top: 3px;
+}
+
+.radio-alternative .label-option {
+    margin-left: -5px;
+    margin-bottom: -6px;
+    margin-right: 10px;
+    font-family: "Space Mono", monospace;
+}
+
+.label-text {
+    margin-bottom: 2px;
+}
+
+.question-sidebar {
+    background-color: var(--card-color);
+    width: 45%;
+    font-size: 1.5em;
+    display: flex;
+    justify-content: center;
+    border-radius: var(--card-radius);
+}
+
+.question-sidebar-title {
+    font-family: "Space Mono", monospace;
+    font-weight: 700;
+    font-size: 1.3rem;
+}

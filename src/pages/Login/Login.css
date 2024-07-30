@@ -1,0 +1,111 @@
+.login-container {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    background-color: var(--details-color);
+}
+
+.login-title {
+    font-size: 3rem;
+}
+
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+.background .shape{
+    height: 220px;
+    width: 220px;
+    position: absolute;
+    border-radius: 50%;
+}
+.shape:first-child{
+    background: linear-gradient(
+        var(--details-color),
+        var(--details-color)
+    );
+    left: -80px;
+    top: -80px;
+}
+.shape:last-child{
+    background: linear-gradient(
+        to right,
+        var(--second-color),
+        var(--second-color)
+    );
+    right: -30px;
+    bottom: -80px;
+}
+form{
+    height: 520px;
+    width: 400px;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: var(--card-radius);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 50px 35px;
+    font-family: "Space Grotesk", sans-serif;
+}
+form *{
+    color: var(--font-color);
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+form h3{
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 42px;
+    text-align: center;
+    font-family: "Space Mono", monospace;
+}
+
+label{
+    display: block;
+    margin-top: 30px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    font-family: "Space Grotesk", sans-serif;
+}
+input{
+    display: block;
+    height: 50px;
+    width: 95%;
+    background-color: rgba(255,255,255,0.25);
+    border-radius: var(--items-radius);
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 1.1rem;
+    font-weight: 300;
+    font-family: "Space Grotesk", sans-serif;
+
+}
+::placeholder{
+    color: #fff;
+}
+button{
+    margin-top: 50px;
+    width: 100%;
+    background-color: #ffffff;
+    color: var(--font-color);
+    padding: 15px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: var(--items-radius);
+    cursor: pointer;
+    font-family: "Space Grotesk", sans-serif;
+}
+
+img.login-logo {
+    width: 130px;
+    margin-bottom: -30px;
+}
