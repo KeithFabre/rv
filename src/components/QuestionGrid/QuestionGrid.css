@@ -24,8 +24,9 @@
 }
 
 .exam {
-    padding: 10px 15px 10px 15px;
+    padding: 5px 10px 5px 10px;
     margin: 0 10px 10px 0;
+    /* max-height: 20px; */
     box-shadow: 0 0 0 2px var(--font-color) inset;
     background-color: var(--card-color);
     border-radius: var(--items-radius);
@@ -41,7 +42,7 @@
 }
 
 .sort {
-    padding: 10px 15px 10px 15px;
+    padding: 5px 10px 5px 10px;
     margin: 0 10px 10px 0;
     box-shadow: 0 0 0 2px var(--font-color) inset;
     background-color: var(--card-color);
