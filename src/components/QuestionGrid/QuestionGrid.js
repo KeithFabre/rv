@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './QuestionGrid.css';
 
 function QuestionGrid() {
@@ -14,6 +13,10 @@ function QuestionGrid() {
     const expandedExam = location.state?.expandedExam || 'C. H. T.';
 
     useEffect(() => {
+        generateQuestions();
+    }, []);
+
+    const generateQuestions = () => {
         const totalQuestions = 45;
         const minCorrectAnswers = Math.ceil(totalQuestions / 2) + 1; // Ensure more correct answers
         const initialAlternatives = [];
@@ -68,7 +71,7 @@ function QuestionGrid() {
             alts.find(alt => alt.selected).correct ? 'correct' : 'incorrect'
         );
         setQuestionStatus(finalStatus);
-    }, []);
+    };
 
     const handleQuestionClick = (index) => {
         setSelectedQuestion(index);
@@ -79,22 +82,26 @@ function QuestionGrid() {
         setIsCollapsed(!isCollapsed);
     };
 
+    const handleLinkClick = () => {
+        window.location.reload(); // Reload the page
+    };
+
     return (
         <div className="questions-container">
             <div className='exam-selector'>
-                <Link to="/detalhes" state={{ expandedExam: 'C. H. T.' }} className="no-link-style">
+                <Link to="/detalhes" state={{ expandedExam: 'C. H. T.' }} className="no-link-style" onClick={handleLinkClick}>
                     <div className='exam'>{expandedExam === 'C. H. T.' ? 'Ciências Humanas e Suas Tecnologias' : 'C. H. T.'}</div>
                 </Link>
-                <Link to="/detalhes" state={{ expandedExam: 'C. N. T.' }} className="no-link-style">
+                <Link to="/detalhes" state={{ expandedExam: 'C. N. T.' }} className="no-link-style" onClick={handleLinkClick}>
                     <div className='exam'>{expandedExam === 'C. N. T.' ? 'Ciências da Natureza e suas Tecnologias' : 'C. N. T.'}</div>
                 </Link>
-                <Link to="/detalhes" state={{ expandedExam: 'L. C. T.' }} className="no-link-style">
+                <Link to="/detalhes" state={{ expandedExam: 'L. C. T.' }} className="no-link-style" onClick={handleLinkClick}>
                     <div className='exam'>{expandedExam === 'L. C. T.' ? 'Linguagens, Códigos e suas Tecnologias' : 'L. C. T.'}</div>
                 </Link>
-                <Link to="/detalhes" state={{ expandedExam: 'M. T.' }} className="no-link-style">
+                <Link to="/detalhes" state={{ expandedExam: 'M. T.' }} className="no-link-style" onClick={handleLinkClick}>
                     <div className='exam'>{expandedExam === 'M. T.' ? 'Matemática e suas Tecnologias' : 'M. T.'}</div>
                 </Link>
-                <Link to="/detalhes" state={{ expandedExam: 'R.' }} className="no-link-style">
+                <Link to="/detalhes" state={{ expandedExam: 'R.' }} className="no-link-style" onClick={handleLinkClick}>
                     <div className='exam'>{expandedExam === 'R.' ? 'Redação' : 'R.'}</div>
                 </Link>
             </div>
