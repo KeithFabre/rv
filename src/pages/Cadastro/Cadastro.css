@@ -1,0 +1,9 @@
+.login-container.signup {
+    display: flex;
+    height: 100vh;
+    /* margin-top: 50rem; */
+}
+
+.login-container.signup input {
+    min-height: 50px;
+}

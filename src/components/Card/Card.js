@@ -1,10 +1,11 @@
 import React from 'react';
 import './Card.css';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import FunctionsIcon from '@mui/icons-material/Functions';
+// import FunctionsIcon from '@mui/icons-material/Functions';
 import GroupsIcon from '@mui/icons-material/Groups';
 import CreateIcon from '@mui/icons-material/Create';
 import BiotechIcon from '@mui/icons-material/Biotech';
+import CalculateOutlinedIcon from '@mui/icons-material/CalculateOutlined';
 
 const iconStyles = {
     humanas: { fontSize: 45, color: '#FF9800'},   
@@ -24,7 +25,7 @@ function Card({ title, info, icon }) {
             case 'chat':
                 return <QuestionAnswerIcon className='icon linguagens' style={iconStyles.linguagens} />;
             case 'functions':
-                return <FunctionsIcon className='icon matematica' style={iconStyles.matematica} />;
+                return <CalculateOutlinedIcon className='icon matematica' style={iconStyles.matematica} />;
             case 'create':
                 return <CreateIcon className='icon redacao' style={iconStyles.redacao} />;
             default:
@@ -37,7 +38,6 @@ function Card({ title, info, icon }) {
             return (
                 <>
                     Redação
-                    
                     <br /><br />
                 </>
             );
@@ -45,8 +45,26 @@ function Card({ title, info, icon }) {
         return title;
     };
 
+    // Determine the card class based on the icon type
+    const cardClass = () => {
+        switch (icon) {
+            case 'groups':
+                return 'card card-humanas';
+            case 'bio':
+                return 'card card-natureza';
+            case 'chat':
+                return 'card card-linguagens';
+            case 'functions':
+                return 'card card-matematica';
+            case 'create':
+                return 'card card-redacao';
+            default:
+                return 'card';
+        }
+    };
+
     return (
-        <div className='card'>
+        <div className={cardClass()}>
             <div className='icon-container'>
                 {renderIcon()}
             </div>

@@ -12,7 +12,7 @@
     --disabled-button-color: #e0e0e0;
     --card-radius: 10px;
     --items-radius: 5px;
-    --card-hover: 0 0 0 4px #5fbec4 inset;
+    --card-hover: 0 0 0 3px #5fbec4 inset;
     /* font-sizes */
 }
 
@@ -26,9 +26,32 @@ html, body, #root {
     font-family: "Space Grotesk", sans-serif;
 }
 
+
+html, body, #root {
+    overflow: hidden; 
+}
+
+.content {
+    overflow-y: auto; 
+    height: 100vh; 
+}
+
+
+@media only screen and (max-width: 1500px) {
+    html, body, #root {
+        transform: scale(0.9); 
+        transform-origin: top left;
+        width: 111.11%; 
+        height: 111.11%;
+        overflow-x: hidden;
+    }
+}
+
+
+
 .highlight-text {
     font-weight: 700;
-    font-family: "Space Mono", monospace;
+    font-family: "Space Grotesk", sans-serif;
 }
 
 h2 {
@@ -36,7 +59,7 @@ h2 {
     font-size: 2.2rem;
     margin-bottom: 2rem;
     margin-left: 5.5rem;
-    font-family: "Space Mono", monospace;
+    font-family: "Space Grotesk", sans-serif;
 }
 
 .no-link-style {
@@ -57,7 +80,8 @@ h2 {
     grid-area: content;
     padding: 20px;
     width: 100%; 
-    height: 100%; 
+    height: 100%;
+    margin-left: -2%; 
     box-sizing: border-box;
     display: flex;
     align-items: center;

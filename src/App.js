@@ -7,30 +7,11 @@ import ExamDetails from './pages/ExamDetails/ExamDetails';
 import './App.css'
 import ExamHistory from './pages/ExamsHistory/ExamsHistory';
 import Login from './pages/Login/Login';
-
-
-// import Main from './pages/Main';
-// import Login from './pages/roles/Login';
-// import Admin from './pages/roles/Admin';
-// import Teacher from './pages/roles/Teacher';
-// import Student from './pages/roles/Student';
+import Cadastro from './pages/Cadastro/Cadastro'
+import EsqueciSenha from './pages/EsqueciSenha/EsqueciSenha'
+import Perfil from './pages/Perfil/Perfil'
 
 function App() {
-
-
-    // const [loggedIn, setLoggedIn] = useState(false);
-    // const [userRole, setUserRole] = useState('');
-
-    {/* {!loggedIn ? (
-        <Login setLoggedIn={setLoggedIn} setUserRole={setUserRole} />
-    ) : userRole === 'administrator' ? (
-        <Admin />
-    ) : userRole === 'teacher' ? (
-        <Teacher />
-    ) : (
-        <Student />
-    )} */}
-
 
     return (
         <Router>
@@ -40,6 +21,9 @@ function App() {
                     <Route path="/detalhes" element={<ExamDetails />} />
                     {/* <Route path="*" element={<NotFound />} /> */}
                     <Route path="/historico" element={<ExamHistory />} />
+                    <Route path="/cadastro" element={<Cadastro />} />
+                    <Route path="/esqueciasenha" element={<EsqueciSenha />} />
+                    <Route path="/perfil" element={<Perfil />} />
                 </Routes>
         </Router>
     );

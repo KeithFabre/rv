@@ -2,7 +2,7 @@
     border-radius: 10px;
     padding: 20px;
     text-align: center;
-    width: 510px; /* deixar em % depois */
+    width: 450px; /* deixar em % depois */
     height: 100px; /* deixar em % depois */
     margin: 0.5rem;
     background-color: var(--card-color);
@@ -27,6 +27,10 @@ span.highlight-text {
     width: 190px;
     height: 190px;
     margin-bottom: 9%;
+}
+
+.placing {
+    font-weight: 700;
 }
 
 .info .card-info {
@@ -70,18 +74,42 @@ span.highlight-text {
 .summary-container .info .card-info {
     /* color: var(--details-color); */
     font-size: 1.6rem;
-    font-family: "Space Mono", monospace;
+    font-family: "Space Grotesk", sans-serif;
     font-weight: 700;
 }
 
 .exam-link-container {
-    width: 98%;
+    width: 1300px;
     display: flex;
     justify-content: flex-end;
 }
 
 .exam.dashboard-link {
-    font-family: "Space Mono", monospace;
+    font-family: "Space Grotesk", sans-serif;
     font-weight: 700;
+    box-shadow: none;
+    background-color: var(--bg-color);
+
+    position: relative; 
+    display: inline-block; 
+    text-decoration: none; 
+    cursor: pointer; 
+}
+
+.exam.dashboard-link::after {
+    content: ''; 
+    position: absolute; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    bottom: 0px; 
+    width: 70%; 
+    height: 3px; 
+
+    background-color: var(--second-color); 
+    transition: width 0.3s ease; 
+}
+
+.exam.dashboard-link:hover::after {
+    width: 100%; 
 }
 

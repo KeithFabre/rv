@@ -2,11 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Statistics.css';
 import Sidebar from '../../components/Sidebar/Sidebar';
+// import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined';
+import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
 
 import Card from '../../components/Card/Card';
 import InfoCard from '../../components/InfoCard/InfoCard'
 import { ReactComponent as SaludationSvg } from '../../assets/saludation.svg';
-
 
 function Statistics() {
 
@@ -16,7 +18,6 @@ function Statistics() {
                 <Sidebar />
             </div>
             <div className='content'>
-                {/* <h2>Dashboard</h2> */}
                     <div className='exam-link-container'>
                         <Link to="/historico" className="no-link-style">
                             <div className='exam dashboard-link'>
@@ -27,9 +28,14 @@ function Statistics() {
                 <div className='card-container'>
                     <div className='welcome-card'>
                         <p className='welcome-message'>
-                            <span style={{'font-weight': '700', 'font-size': '1.3rem'}} className=''>Olá, [usuário]!</span>
-                            <br/> Confira seus resultados</p>
-                        <SaludationSvg className='saludation-svg'/>   
+                            {/* <span style={{'font-weight': '700', 'font-size': '1.3rem'}} className=''>Olá, [usuário]!</span> */}
+                            Classificação geral: <span className='placing'>1º</span>
+                            <br /> Classificação do grupo: <span className='placing'>1º</span>
+                        
+                        </p>
+
+                        <LeaderboardOutlinedIcon className='icon' style={{ fontSize: 65 }} />
+                        {/* <SaludationSvg className='saludation-svg'/>    */}
                     </div>
                     <InfoCard title="Média sem redação" info="709,2"/>
                     <InfoCard title="Média com redação" info="759,4"/>
