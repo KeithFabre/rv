@@ -188,13 +188,10 @@
     text-align: center;
 }
 
-img.question-img.vertical {
-    width: 60%;
+.question-img {
+    height: 100%;
 }
 
-img.question-img.horizontal {
-    width: 90%;
-}
 
 .alternatives {
     margin-top: 20px;
@@ -398,4 +395,12 @@ img.question-img.horizontal {
     /* margin-top: -230px; */
 }
 
-
+.question-details-image img,
+.question-details-video video,
+.question-details-answer {
+    width: 100%;
+    margin-bottom: 2rem;
+    font-weight: 900;
+    font-size: 1.8rem;
+    text-align: center;
+}

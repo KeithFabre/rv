@@ -7,11 +7,19 @@ import { ReactComponent as SaludationSvg } from '../../assets/saludation.svg';
 
 function Perfil() {
     const [firstAccess, setFirstAccess] = useState(true);
+    const [userName, setUserName] = useState(''); // Store user's name
 
     useEffect(() => {
+        // Retrieve firstAccess and userName from localStorage
         const storedFirstAccess = localStorage.getItem('firstAccess');
+        const storedUserName = localStorage.getItem('userName'); // Retrieve user's name from localStorage
+
         if (storedFirstAccess === 'false') {
             setFirstAccess(false);
+        }
+
+        if (storedUserName) {
+            setUserName(storedUserName); // Set the user's name
         }
     }, []);
 
@@ -29,24 +37,22 @@ function Perfil() {
             <div className='profile-container'>
             {firstAccess && (
                 <div className='form-profile'>
-                    <h1>Olá, [usuário]!</h1>
+                    <h1>Olá, {userName}!</h1> {/* Replace [usuário] with userName */}
                     <h3>Finalize seu cadastro</h3>
-                        <Link to="/">
-                            <button className='button first-access' onClick={handleFinalizeCadastro}>
-                                Finalizar cadastro
-                            </button>
-                        </Link>
+                    <Link to="/">
+                        <button className='button first-access' onClick={handleFinalizeCadastro}>
+                            Finalizar cadastro
+                        </button>
+                    </Link>
                 </div>
             )}
 
             {!firstAccess && (
                 <div className='user-info'>
-                    <h2>Olá, [usuário]!</h2>
+                    <h2>Olá, {userName}!</h2> 
                     <SaludationSvg className='saludation-svg profile'/>   
                 </div>
             )}
-
-            
 
             </div>
         </div>

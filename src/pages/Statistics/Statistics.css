@@ -81,7 +81,8 @@ span.highlight-text {
 .exam-link-container {
     width: 1300px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    margin-bottom: -10px;
 }
 
 .exam.dashboard-link {
@@ -94,6 +95,8 @@ span.highlight-text {
     display: inline-block; 
     text-decoration: none; 
     cursor: pointer; 
+
+    margin-top: 10px;
 }
 
 .exam.dashboard-link::after {
@@ -101,7 +104,7 @@ span.highlight-text {
     position: absolute; 
     left: 50%; 
     transform: translateX(-50%); 
-    bottom: 0px; 
+    bottom: 10px; 
     width: 70%; 
     height: 3px; 
 
@@ -113,3 +116,11 @@ span.highlight-text {
     width: 100%; 
 }
 
+.result-text {
+    margin-left: 20px;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    box-shadow: none;
+    background-color: var(--bg-color);
+    font-size: 1.2rem;
+}

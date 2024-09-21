@@ -7,18 +7,19 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 function QuestionGrid() {
     const [selectedQuestion, setSelectedQuestion] = useState(null);
-    const [questionStatus, setQuestionStatus] = useState([]); // Status of correct/incorrect
-    const [isCollapsed, setIsCollapsed] = useState(false); // Collapse/Expand the grid
-    const [sortOrder, setSortOrder] = useState('chronological'); // Sorting order
+    const [questionStatus, setQuestionStatus] = useState([]);
+    const [alternatives, setAlternatives] = useState([]);
+    const [selectedAlternatives, setSelectedAlternatives] = useState([]);
+    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [sortOrder, setSortOrder] = useState('chronological');
     const [isDropdownVisible, setIsDropdownVisible] = useState(false); 
-    const [activeStatistic, setActiveStatistic] = useState(null); // For statistics
+    const [activeStatistic, setActiveStatistic] = useState(null);
 
     const [questionImage, setQuestionImage] = useState(null); 
     const [questionStatistics, setQuestionStatistics] = useState(null); 
     const [studentStatistics, setStudentStatistics] = useState(null); 
     const [questionVideo, setQuestionVideo] = useState(null); 
     const [questionAnswer, setQuestionAnswer] = useState(null); 
-    const [questionSubjects, setQuestionSubjects] = useState({}); // Holds the subject data
 
     const location = useLocation();
     const expandedExam = location.state?.expandedExam || 'CH';
@@ -30,7 +31,7 @@ function QuestionGrid() {
     }, []);
 
     useEffect(() => {
-        // T
+        // para clicks fora do dropdown
         const handleClickOutside = (event) => {
             if (examSelectorRef.current && !examSelectorRef.current.contains(event.target)) {
                 setIsDropdownVisible(false); 
@@ -43,47 +44,58 @@ function QuestionGrid() {
         };
     }, []); 
 
-    // gera questões e seus status (certo ou errado)
-    const generateQuestions = async () => {
-        const totalQuestions = 180;
+    const generateQuestions = () => {
+        const totalQuestions = 45;
+        const minCorrectAnswers = Math.ceil(totalQuestions / 2) + 1;
+        const initialAlternatives = [];
         const status = [];
-        const subjects = {}; // guarda os assuntos pra cada questão
     
-        try {
-            // pega a performance do usuário
-            const userPerformanceResponse = await fetch('https://rvcurso.com.br/get.php?action=getPerformance&ID_usuario=1&ID_prova=1');
-            const performanceData = await userPerformanceResponse.json();
-            const userAnswers = performanceData[0].Respostas;
-
-            // pega informações da questão pra cada questão
-            const infoSimuladoResponse = await fetch('https://rvcurso.com.br/get.php?action=get_info_simulado&ID_simulado=1');
-            const questionData = await infoSimuladoResponse.json();
-
-            // processa cada questão
-            for (let i = 91; i <= 180; i++) {
-                const questionInfo = questionData[i.toString()];
-                if (questionInfo) {
-                    const [subject, correctAnswer, isCorrect] = questionInfo;
-
-                    // guarda o assunto
-                    subjects[i] = subject;
-
-                    // compara resposta do usuario com gabarito
-                    const userAnswer = userAnswers[`Q${i}`];
-                    if (userAnswer === correctAnswer) {
-                        status[i] = 'correct';  // resposta certa
-                    } else {
-                        status[i] = 'incorrect';  // resposta errada
-                    }
-                }
-            }
-    
-            // Update state once all questions are processed
-            setQuestionStatus(status);  // Set the correct/incorrect status
-            setQuestionSubjects(subjects);  // Set subjects mapped to question numbers
-        } catch (error) {
-            console.error('Error fetching user performance or question data:', error);
+        for (let i = 0; i < minCorrectAnswers; i++) {
+            const options = ['a', 'b', 'c', 'd', 'e']; 
+            const correct = options[Math.floor(Math.random() * options.length)];
+            const selected = options[Math.floor(Math.random() * options.length)];
+            initialAlternatives.push(
+                options.map(option => ({
+                    option,
+                    text: 'Lorem Ipsum dolor sit amet',
+                    correct: option === correct,
+                    selected: option === selected
+                }))
+            );
+            status.push('correct');
         }
+    
+        for (let i = minCorrectAnswers; i < totalQuestions; i++) {
+            const options = ['a', 'b', 'c', 'd', 'e']; 
+            const correct = options[Math.floor(Math.random() * options.length)];
+            const selected = options[Math.floor(Math.random() * options.length)];
+            initialAlternatives.push(
+                options.map(option => ({
+                    option,
+                    text: 'Lorem Ipsum dolor sit amet',
+                    correct: option === correct,
+                    selected: option === selected
+                }))
+            );
+            status.push('incorrect');
+        }
+    
+        for (let i = status.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [status[i], status[j]] = [status[j], status[i]];
+        }
+    
+        setAlternatives(initialAlternatives);
+    
+        const selectedAlt = initialAlternatives.map(alts => 
+            alts.find(alt => alt.selected).option
+        );
+        setSelectedAlternatives(selectedAlt);
+    
+        const finalStatus = initialAlternatives.map((alts, index) =>
+            alts.find(alt => alt.selected).correct ? 'correct' : 'incorrect'
+        );
+        setQuestionStatus(finalStatus);
     };
 
     const fetchQuestionData = async (questionNumber) => {
@@ -92,17 +104,18 @@ function QuestionGrid() {
             const data = await response.json();
             if (data) {
                 setQuestionImage(data.link_imagem); 
-                setQuestionAnswer(data.gabarito);
-                setQuestionStatistics(data.link_statistics); 
-                setStudentStatistics(data.link_statistics);
-                setQuestionVideo(data.link_resolution_video);
+                setQuestionStatistics(data.link_statistics)
+                setStudentStatistics(data.link_statistics)
+                setQuestionVideo(data.link_resolution_video)
+                setQuestionAnswer(data.gabarito)
             } else {
-                console.error('Data not found for question:', questionNumber);
+                console.error('Image link not found for question:', questionNumber);
             }
         } catch (error) {
             console.error('Error fetching question data:', error);
         }
     };
+    
 
     const handleQuestionClick = (index) => {
         setSelectedQuestion(index);
@@ -212,21 +225,20 @@ function QuestionGrid() {
                 {expandedExam !== 'R' ? (
                     <div className='question-container'> 
                         <div className={`grid ${isCollapsed ? 'collapsed' : 'expanded'}`}>
-                        {sortedQuestions.map((questionNumber, index) => (
-                            (!isCollapsed || selectedQuestion === questionNumber) && (
-                                <div
-                                    key={questionNumber}
-                                    className={`square ${questionStatus[index]} ${selectedQuestion === questionNumber ? 'selected' : ''}`}
-                                    onClick={() => handleQuestionClick(questionNumber)}
-                                >
-                                    {questionNumber}
-                                    <span className={`subject ${questionStatus[index]}`}>
-                                        <span className="first-letter">{questionSubjects[questionNumber]?.charAt(0)}</span>
-                                        {questionSubjects[questionNumber]?.slice(1)}
-                                    </span>
-                                </div>
-                            )
-                        ))}
+                            {sortedQuestions.map((questionNumber, index) => (
+                                (!isCollapsed || selectedQuestion === questionNumber) && (
+                                    <div
+                                        key={questionNumber}
+                                        className={`square ${questionStatus[index]} ${selectedQuestion === questionNumber ? 'selected' : ''}`}
+                                        onClick={() => handleQuestionClick(questionNumber)}
+                                    >
+                                        {questionNumber}
+                                        <span className={`subject ${questionStatus[index]}`}>
+                                            <span className="first-letter">B</span>io
+                                        </span>
+                                    </div>
+                                )
+                            ))}
 
                             {selectedQuestion !== null && (
                                 <div
@@ -341,7 +353,7 @@ function QuestionGrid() {
                                     {activeStatistic === 'Resolução em Vídeo' ? (
                                         <div className='question-details-video'>
                                             <video controls>
-                                            <source src={questionVideo} type="video/mp4" />
+                                            <source src="https://rvcurso.com.br/Question_video_resolution/ENEM_RV2024.1/questao_91.mp4" type="video/mp4" />
                                             Your browser does not support the video tag.
                                             </video>
                                         </div>
