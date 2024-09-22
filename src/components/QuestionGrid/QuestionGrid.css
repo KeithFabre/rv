@@ -88,8 +88,8 @@
 }
 
 .square {
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     background-color: var(--card-color);
     color: var(--font-color);
     display: flex;
@@ -190,6 +190,7 @@
 
 .question-img {
     height: 100%;
+    max-width: 100%;
 }
 
 
@@ -403,4 +404,20 @@
     font-weight: 900;
     font-size: 1.8rem;
     text-align: center;
+}
+
+/* .square.correct {
+    border: 2px solid green;
+    color: green;
+}
+
+.square.incorrect {
+    border: 2px solid red;
+    color: red;
+} */
+
+.square.unavailable {
+    background-color: #f0f0f0;
+    color: #bdbdbd;
+    box-shadow: 0 0 0 1px #bdbdbd inset;
 }

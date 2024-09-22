@@ -7,44 +7,85 @@ import Card from '../../components/Card/Card';
 import InfoCard from '../../components/InfoCard/InfoCard';
 
 function Statistics() {
-    // State to hold the performance, simulado date, and user's first name
     const [performance, setPerformance] = useState(null);
     const [simuladoDate, setSimuladoDate] = useState('');
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState(''); // Store user's name
+    const userID = localStorage.getItem('userID'); // Fetch the userID from localStorage
+    const selectedSimuladoID = localStorage.getItem('selectedSimuladoID'); // Fetch selected simulado from localStorage
 
-    // Fetch simulado data and performance for simulado with ID 1
+    // Helper function to round the numbers to one decimal place
+    const roundToOneDecimal = (number) => {
+        return number ? Number(number).toFixed(1) : '-';  // Check if number exists, then round it
+    };
+
+    // Helper function to convert date from dd/mm/yyyy to yyyy-mm-dd for sorting
+    const parseDate = (dateString) => {
+        const [day, month, year] = dateString.split('/');
+        return new Date(`${year}-${month}-${day}`);
+    };
+
+    const isUnavailable = (info) => info === '-';
+
+
+    // Fetch simulado data and performance for the most recent simulado or the selected simulado
     useEffect(() => {
         const fetchSimuladoData = async () => {
             try {
                 // Retrieve user's name from localStorage
                 const storedUserName = localStorage.getItem('userName');
                 if (storedUserName) {
-                    // Get only the first word of the name
                     const firstName = storedUserName.split(' ')[0];
                     setUserName(firstName); // Set user's first name
                 }
-
-                // Fetch the list of simulados
-                const responseSimulado = await fetch('https://rvcurso.com.br/get.php?action=get_simulados_by_aluno&ID_aluno=1');
+    
+                // Fetch the list of simulados for the user
+                const responseSimulado = await fetch(`https://rvcurso.com.br/get.php?action=get_simulados_by_aluno&ID_aluno=${userID}`);
                 const simuladoData = await responseSimulado.json();
-
-                // Get the date for simulado with ID 1 (simulado_IDs[0])
-                setSimuladoDate(simuladoData.simulado_datas[0]);
-
-                // Fetch the performance data for simulado with ID 1
-                const responsePerformance = await fetch('https://rvcurso.com.br/get.php?action=getPerformance&ID_usuario=1&ID_prova=1');
+    
+                // Map the simulado data into an array
+                const simuladosData = simuladoData.simulado_IDs.map((id, index) => ({
+                    id,
+                    date: simuladoData.simulado_datas[index],
+                }));
+    
+                let selectedSimulado;
+    
+                // Check if a simulado was previously selected
+                if (selectedSimuladoID) {
+                    // If a simulado is selected, find that simulado
+                    selectedSimulado = simuladosData.find(simulado => simulado.id === selectedSimuladoID);
+                }
+    
+                // If no simulado is selected or the selected one doesn't exist, use the last one
+                if (!selectedSimulado) {
+                    selectedSimulado = simuladosData[simuladosData.length - 1];
+                }
+    
+                // Set the selected simulado date
+                setSimuladoDate(selectedSimulado.date);
+    
+                // Fetch the performance data for the selected simulado
+                const responsePerformance = await fetch(`https://rvcurso.com.br/get.php?action=getPerformance&ID_usuario=${userID}&ID_prova=${selectedSimulado.id}`);
                 const performanceData = await responsePerformance.json();
-                setPerformance(performanceData[0]);  // Assuming performance data is an array and we want the first item
+                
+                // Set the performance state
+                setPerformance(performanceData[0]);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching simulado or performance data:', error);
                 setLoading(false);
             }
         };
-
-        fetchSimuladoData();
-    }, []);
+    
+        if (userID) {
+            fetchSimuladoData();
+        } else {
+            console.error('No userID found in localStorage.');
+        }
+    }, [userID, selectedSimuladoID]);
+    
+    
 
     if (loading) {
         return <div>Loading...</div>;  // Show a loading message until data is fetched
@@ -64,13 +105,14 @@ function Statistics() {
             <div className='content'>
 
                 <div className='exam-link-container'>
-                    <p className="result-text"> Oi, {userName}! Confira aqui seus resultados: </p> {/* Use userName here (only first word) */}
+                    <p className="result-text"> Oi, {userName}! Confira aqui seus resultados: </p>
                     <div className='exam dashboard-link'>
+                    <Link to="/historico" className="no-link-style">
                         Simulado realizado em {simuladoDate}
+                    </Link>
                     </div>
                 </div>
 
-                {/* Performance data for simulado with ID 1 */}
                 <div className='card-container'>
                     <div className='welcome-card'>
                         <p className='welcome-message'>
@@ -79,28 +121,67 @@ function Statistics() {
                         </p>
                         <LeaderboardOutlinedIcon className='icon' style={{ fontSize: 65 }} />
                     </div>
-                    {/* validar aqui */}
-                    <InfoCard title="Média sem redação" info={Notas.Media_sem_redacao} />   
-                    <InfoCard title="Média com redação" info={Notas.Media_com_redacao} />
+                    <InfoCard title="Média sem redação" info={roundToOneDecimal(Notas.Media_sem_redacao)} />
+                    <InfoCard title="Média com redação" info={roundToOneDecimal(Notas.Media_com_redacao)} />
                 </div>
 
                 <div className='card-container'>
-                    <Link to="/detalhes" state={{ expandedExam: 'CH' }} className="no-link-style">
-                        <Card title="Ciências Humanas e suas Tecnologias" info={Notas.Ciencias_Humanas} icon="groups" />
-                    </Link>
-                    <Link to="/detalhes" state={{ expandedExam: 'CN' }} className="no-link-style">
-                        <Card title="Ciências da Natureza e suas Tecnologias" info={Notas.Ciencias_Natureza} icon="bio" />
-                    </Link>
-                    <Link to="/detalhes" state={{ expandedExam: 'LC' }} className="no-link-style">
-                        <Card title="Linguagens, Códigos e suas Tecnologias" info={Notas.Linguagens} icon="chat" />
-                    </Link>
-                    <Link to="/detalhes" state={{ expandedExam: 'MT' }} className="no-link-style">
-                        <Card title="Matemática e suas Tecnologias" info={Notas.Matematica} icon="functions" />
-                    </Link>
-                    <Link to="/detalhes" state={{ expandedExam: 'R' }} className="no-link-style">
-                        <Card title="Redação" info={Notas.Redacao} icon="create" />
-                    </Link>
-                </div>
+    {/* Card 1: Ciências Humanas e suas Tecnologias */}
+    {isUnavailable(roundToOneDecimal(Notas.Ciencias_Humanas)) ? (
+        <div className='unavailable'>
+            <Card unavailable title="Ciências Humanas e suas Tecnologias" info={roundToOneDecimal(Notas.Ciencias_Humanas)} icon="groups" />
+        </div>
+    ) : (
+        <Link to="/detalhes" state={{ expandedExam: 'CH' }} className="no-link-style">
+            <Card title="Ciências Humanas e suas Tecnologias" info={roundToOneDecimal(Notas.Ciencias_Humanas)} icon="groups" />
+        </Link>
+    )}
+
+    {/* Card 2: Linguagens, Códigos e suas Tecnologias */}
+    {isUnavailable(roundToOneDecimal(Notas.Linguagens)) ? (
+        <div className='unavailable'>
+            <Card unavailable title="Linguagens, Códigos e suas Tecnologias" info={roundToOneDecimal(Notas.Linguagens)} icon="chat" />
+        </div>
+    ) : (
+        <Link to="/detalhes" state={{ expandedExam: 'LC' }} className="no-link-style">
+            <Card title="Linguagens, Códigos e suas Tecnologias" info={roundToOneDecimal(Notas.Linguagens)} icon="chat" />
+        </Link>
+    )}
+
+    {/* Card 3: Ciências da Natureza e suas Tecnologias */}
+    {isUnavailable(roundToOneDecimal(Notas.Ciencias_Natureza)) ? (
+        <div className='unavailable'>
+            <Card unavailable title="Ciências da Natureza e suas Tecnologias" info={roundToOneDecimal(Notas.Ciencias_Natureza)} icon="bio" />
+        </div>
+    ) : (
+        <Link to="/detalhes" state={{ expandedExam: 'CN' }} className="no-link-style">
+            <Card title="Ciências da Natureza e suas Tecnologias" info={roundToOneDecimal(Notas.Ciencias_Natureza)} icon="bio" />
+        </Link>
+    )}
+
+    {/* Card 4: Matemática e suas Tecnologias */}
+    {isUnavailable(roundToOneDecimal(Notas.Matematica)) ? (
+        <div className='unavailable'>
+            <Card unavailable title="Matemática e suas Tecnologias" info={roundToOneDecimal(Notas.Matematica)} icon="functions" />
+        </div>
+    ) : (
+        <Link to="/detalhes" state={{ expandedExam: 'MT' }} className="no-link-style">
+            <Card title="Matemática e suas Tecnologias" info={roundToOneDecimal(Notas.Matematica)} icon="functions" />
+        </Link>
+    )}
+
+    {/* Card 5: Redação */}
+    {isUnavailable(roundToOneDecimal(Notas.Redacao)) ? (
+        <div className='unavailable'>
+            <Card unavailable title="Redação" info={roundToOneDecimal(Notas.Redacao)} icon="create" />
+        </div>
+    ) : (
+        <Link to="/detalhes" state={{ expandedExam: 'R' }} className="no-link-style">
+            <Card title="Redação" info={roundToOneDecimal(Notas.Redacao)} icon="create" />
+        </Link>
+    )}
+</div>
+
 
                 <div className='summary-container'>
                     <div className='summary'>
@@ -110,7 +191,7 @@ function Statistics() {
                         </div>
 
                         <div className='info'>
-                            <p className='card-info' style={{ color: '#ff6767' }}>{180 - Acertos}</p> {/* pegar total das questões e subtrair dos acertos */}
+                            <p className='card-info' style={{ color: '#ff6767' }}>{180 - Acertos}</p> {/* Subtract correct answers to get incorrect/nulos */}
                             <p className='card-title'>erros/nulos</p>
                         </div>
 

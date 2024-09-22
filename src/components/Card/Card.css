@@ -67,3 +67,9 @@
 .card-info {
     margin-top: 0px;
 }
+
+.card.unavailable {
+    background-color: #f0f0f0!important;
+    color: #bdbdbd;
+    box-shadow: none;
+}

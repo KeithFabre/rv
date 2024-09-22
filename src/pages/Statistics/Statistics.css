@@ -96,7 +96,7 @@ span.highlight-text {
     text-decoration: none; 
     cursor: pointer; 
 
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .exam.dashboard-link::after {
@@ -124,3 +124,4 @@ span.highlight-text {
     background-color: var(--bg-color);
     font-size: 1.2rem;
 }
+

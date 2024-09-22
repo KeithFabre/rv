@@ -1,21 +1,20 @@
 import React from 'react';
 import './Card.css';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-// import FunctionsIcon from '@mui/icons-material/Functions';
 import GroupsIcon from '@mui/icons-material/Groups';
 import CreateIcon from '@mui/icons-material/Create';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import CalculateOutlinedIcon from '@mui/icons-material/CalculateOutlined';
 
 const iconStyles = {
-    humanas: { fontSize: 45, color: '#FF9800'},   
-    natureza: { fontSize: 45, color: '#4CAF50'},  
-    linguagens: { fontSize: 45, color: '#8E44AD'}, 
-    matematica: { fontSize: 45, color: '#E53935'},
-    redacao: { fontSize: 45, color: '#336699'}    
+    humanas: { fontSize: 45, color: '#FF9800' },   
+    natureza: { fontSize: 45, color: '#4CAF50' },  
+    linguagens: { fontSize: 45, color: '#8E44AD' }, 
+    matematica: { fontSize: 45, color: '#E53935' },
+    redacao: { fontSize: 45, color: '#336699' }    
 };
 
-function Card({ title, info, icon }) {
+function Card({ title, info, icon, unavailable }) {
     const renderIcon = () => {
         switch (icon) {
             case 'groups':
@@ -45,22 +44,33 @@ function Card({ title, info, icon }) {
         return title;
     };
 
-    // Determine the card class based on the icon type
+    // Determine the card class based on the icon type and unavailable status
     const cardClass = () => {
+        let baseClass = 'card';
         switch (icon) {
             case 'groups':
-                return 'card card-humanas';
+                baseClass += ' card-humanas';
+                break;
             case 'bio':
-                return 'card card-natureza';
+                baseClass += ' card-natureza';
+                break;
             case 'chat':
-                return 'card card-linguagens';
+                baseClass += ' card-linguagens';
+                break;
             case 'functions':
-                return 'card card-matematica';
+                baseClass += ' card-matematica';
+                break;
             case 'create':
-                return 'card card-redacao';
+                baseClass += ' card-redacao';
+                break;
             default:
-                return 'card';
+                break;
         }
+        // Add unavailable class if the unavailable prop is true
+        if (unavailable) {
+            baseClass += ' unavailable';
+        }
+        return baseClass;
     };
 
     return (
