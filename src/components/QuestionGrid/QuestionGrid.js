@@ -4,6 +4,7 @@ import './QuestionGrid.css';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropDown';
+import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 
 function QuestionGrid() {
     const [selectedQuestion, setSelectedQuestion] = useState(null);
@@ -20,6 +21,11 @@ function QuestionGrid() {
     const [questionAnswer, setQuestionAnswer] = useState(null); 
     const [questionSubjects, setQuestionSubjects] = useState({}); // Holds the subject data
     const [availableQuestions, setAvailableQuestions] = useState({}); // Track available questions
+    const [hasVideo, setHasVideo] = useState({});
+    const [userAnswers, setUserAnswers] = useState({}); // To store student answers
+    const [questionComentario, setQuestionComentario] = useState(''); // To store the comentario from question details
+    const [questionAnswers, setQuestionAnswers] = useState({}); // Store correct answers (gabaritos) for each question
+
 
     const location = useLocation();
     const expandedExam = location.state?.expandedExam || 'CH';
@@ -44,59 +50,66 @@ function QuestionGrid() {
         };
     }, []); 
 
-    // Generates questions and compares user's answers with correct answers
-    const generateQuestions = async () => {
-        const userID = localStorage.getItem('userID');
-        const selectedSimulado = localStorage.getItem('selectedSimulado') || '1';  // Default to 1 if none is selected
-        const totalQuestions = 180;
-        const status = [];
-        const subjects = {}; // Stores subjects for each question
-        const availableQuestionsTemp = {}; // Temporary store for available questions
-    
-        try {
-            // Fetch user performance
-            const userPerformanceResponse = await fetch(`https://rvcurso.com.br/get.php?action=getPerformance&ID_usuario=${userID}&ID_prova=${selectedSimulado}`);
-            const performanceData = await userPerformanceResponse.json();
-            const userAnswers = performanceData[0].Respostas;
 
-            // Fetch correct answers and subject information
-            const infoSimuladoResponse = await fetch(`https://rvcurso.com.br/get.php?action=get_info_simulado&ID_simulado=${selectedSimulado}`);
-            const questionData = await infoSimuladoResponse.json();
+const generateQuestions = async () => {
+    const userID = localStorage.getItem('userID');
+    const selectedSimulado = localStorage.getItem('selectedSimuladoID');
 
-            // Compare user's answers with correct answers
-            for (let i = 91; i <= 180; i++) {
-                const questionInfo = questionData[i.toString()];
-                if (questionInfo) {
-                    const [subject, correctAnswer] = questionInfo;
+    const status = [];
+    const subjects = {};
+    const availableQuestionsTemp = {};
+    const hasVideoTemp = {};
+    const answersTemp = {};  // Store the correct answers (gabaritos)
 
-                    // Store the subject
-                    subjects[i] = subject;
+    try {
+        const userPerformanceResponse = await fetch(`https://rvcurso.com.br/get.php?action=getPerformance&ID_usuario=${userID}&ID_prova=${selectedSimulado}`);
+        const performanceData = await userPerformanceResponse.json();
+        const userAnswers = performanceData[0]?.Respostas;
 
-                    // Mark question as available
-                    availableQuestionsTemp[i] = true;
-
-                    // Compare user’s answer with the correct answer
-                    const userAnswer = userAnswers[i.toString()];
-                    if (userAnswer === correctAnswer) {
-                        status[i] = 'correct';  // Mark question as correct
-                    } else {
-                        status[i] = 'incorrect';  // Mark question as incorrect
-                    }
-                }
-            }
-
-            // Update state after processing
-            setQuestionStatus(status);  // Set correct/incorrect status
-            setQuestionSubjects(subjects);  // Set subjects for each question
-            setAvailableQuestions(availableQuestionsTemp);  // Set available questions
-        } catch (error) {
-            console.error('Error fetching user performance or question data:', error);
+        if (!userAnswers) {
+            console.error('No answers found for user');
+            return;
         }
-    };
+
+        setUserAnswers(userAnswers);  // Store student answers
+
+        // Fetch correct answers and subject information
+        const infoSimuladoResponse = await fetch(`https://rvcurso.com.br/get.php?action=get_info_simulado&ID_simulado=${selectedSimulado}`);
+        const questionData = await infoSimuladoResponse.json();
+
+        // Process each question
+        for (let i = 91; i <= 180; i++) {
+            const questionInfo = questionData[i.toString()];
+            if (questionInfo) {
+                const [subject, correctAnswer, videoAvailable] = questionInfo;
+
+                subjects[i] = subject;
+                availableQuestionsTemp[i] = true;
+                hasVideoTemp[i] = videoAvailable;
+                answersTemp[i] = correctAnswer;  // Store the correct answer (gabarito)
+
+                const userAnswer = userAnswers[i.toString()];
+                status[i] = userAnswer === correctAnswer ? 'correct' : 'incorrect';
+            }
+        }
+
+        setQuestionStatus(status);
+        setQuestionSubjects(subjects);
+        setAvailableQuestions(availableQuestionsTemp);
+        setHasVideo(hasVideoTemp);
+        setQuestionAnswers(answersTemp);  // Set the correct answers in the state
+    } catch (error) {
+        console.error('Error fetching user performance or question data:', error);
+    }
+};
+
+    
+    
+    
 
     const fetchQuestionData = async (questionNumber) => {
         try {
-            const selectedSimulado = localStorage.getItem('selectedSimulado') || '1';
+            const selectedSimulado = localStorage.getItem('selectedSimuladoID') || '1';
             const response = await fetch(`https://rvcurso.com.br/get.php?action=get_question&ID_simulado=${selectedSimulado}&questao=${questionNumber}`);
             const data = await response.json();
             if (data) {
@@ -105,6 +118,7 @@ function QuestionGrid() {
                 setQuestionStatistics(data.link_statistics); 
                 setStudentStatistics(data.link_statistics);
                 setQuestionVideo(data.link_resolution_video);
+                setQuestionComentario(data.comentario);  // Store comentario in state
             } else {
                 console.error('Data not found for question:', questionNumber);
             }
@@ -112,6 +126,7 @@ function QuestionGrid() {
             console.error('Error fetching question data:', error);
         }
     };
+    
 
     const handleQuestionClick = (index) => {
         if (availableQuestions[index]) {  // Only allow clicking if the question is available
@@ -135,9 +150,10 @@ function QuestionGrid() {
     };
 
     const abbreviateSubject = (subject) => {
-        if (subject === 'Matemática') return 'Mat.';
-        if (subject === 'Astronomia') return 'Astro.';
-        if (subject === 'Biologia') return 'Bio.';
+        if (subject === 'matematica') return 'Mat.';
+        if (subject === 'biologia') return 'Bio.';
+        if (subject === 'quimica') return 'Quim.';
+        if (subject === 'fisica') return 'Fis.';
         return subject; // Return subject as is for all other subjects
     };
     
@@ -191,12 +207,12 @@ function QuestionGrid() {
             <div className='question-area'>
                 <div className='question-buttons'>
                     <div className='exam-selector' ref={examSelectorRef}>
-                        <Link to="/detalhes" state={{ expandedExam: 'CH' }} className="no-link-style" onClick={handleLinkClick}>
+                        {/* <Link to="/detalhes" state={{ expandedExam: 'CH' }} className="no-link-style" onClick={handleLinkClick}>
                             <div className='exam'>{expandedExam === 'CH' ? 'Ciências Humanas e suas Tecnologias' : 'CH'}</div>
                         </Link>
                         <Link to="/detalhes" state={{ expandedExam: 'LC' }} className="no-link-style" onClick={handleLinkClick}>
                             <div className='exam'>{expandedExam === 'LC' ? 'Linguagens, Códigos e suas Tecnologias' : 'LC'}</div>
-                        </Link>
+                        </Link> */}
                         <Link to="/detalhes" state={{ expandedExam: 'CN' }} className="no-link-style" onClick={handleLinkClick}>
                             <div className='exam'>{expandedExam === 'CN' ? 'Ciências da Natureza e suas Tecnologias' : 'CN'}</div>
                         </Link>
@@ -228,16 +244,23 @@ function QuestionGrid() {
                             {sortedQuestions.map((questionNumber, index) => (
                                 (!isCollapsed || selectedQuestion === questionNumber) && (
                                     <div
-                                        key={questionNumber}
-                                        className={`square ${availableQuestions[questionNumber] ? questionStatus[questionNumber] : 'unavailable'} ${selectedQuestion === questionNumber ? 'selected' : ''}`}
-                                        onClick={() => handleQuestionClick(questionNumber)}
-                                        style={{ cursor: availableQuestions[questionNumber] ? 'pointer' : 'default' }} // Make unclickable if not in availableQuestions
-                                    >
-                                        {questionNumber}
-                                        <span className={`subject ${questionStatus[questionNumber]}`}>
-                                            <span className="first-letter">{abbreviateSubject(questionSubjects[questionNumber])}</span>
-                                        </span>
-                                    </div>
+  key={questionNumber}
+  className={`square ${questionAnswers[questionNumber] === 'X' ? 'anulada' : ''} ${availableQuestions[questionNumber] ? questionStatus[questionNumber] : 'unavailable'} ${selectedQuestion === questionNumber ? 'selected' : ''}`}
+  onClick={() => handleQuestionClick(questionNumber)}
+  style={{ cursor: availableQuestions[questionNumber] ? 'pointer' : 'default' }} // Make unclickable if not in availableQuestions
+>
+  {questionNumber}
+  <span className={`subject ${questionStatus[questionNumber]}`}>
+    <span className="first-letter">{abbreviateSubject(questionSubjects[questionNumber])}</span>
+  </span>
+  {hasVideo[questionNumber] && (  // Only show the icon if the video is available
+    <span className={`camera-icon ${questionStatus[questionNumber]}`}>
+      <CameraAltOutlinedIcon style={{ fontSize: 15 }} />
+    </span>
+  )}
+</div>
+
+
                                 )
                             ))}
 
@@ -282,11 +305,17 @@ function QuestionGrid() {
                 {(selectedQuestion !== null) && (
                     <div className="question-sidebar">
                         <div className="question-sidebar-statistic-container">
-                            <p className='question-sidebar-title'>Detalhes da Questão {selectedQuestion + 1}</p>
+                            <p className='question-sidebar-title'>Detalhes da Questão {selectedQuestion}</p>
                             <div className="question-buttons-container">
                                 <div className={`exam details ${activeStatistic === 'Estatísticas da Questão' ? 'active' : ''}`} onClick={() => showStatistics('Estatísticas da Questão')}>Estatísticas da Questão</div>
-                                <div className={`exam details ${activeStatistic === 'Estatísticas do Aluno' ? 'active' : ''}`} onClick={() => showStatistics('Estatísticas do Aluno')}>Estatísticas do Aluno</div>
-                                <div className={`exam details ${activeStatistic === 'Resolução em Vídeo' ? 'active' : ''}`} onClick={() => showStatistics('Resolução em Vídeo')}>Resolução em Vídeo</div>
+                                <div
+                                    className={`exam details ${activeStatistic === 'Resolução em Vídeo' ? 'active' : ''} ${!hasVideo[selectedQuestion] ? 'unavailable' : ''}`}
+                                    onClick={() => hasVideo[selectedQuestion] && showStatistics('Resolução em Vídeo')}
+                                >
+                                    Resolução em Vídeo
+                                </div>
+                                <div className={`exam details ${activeStatistic === 'Resposta do Aluno' ? 'active' : ''}`} onClick={() => showStatistics('Resposta do Aluno')}>Resposta do Aluno</div>
+                                
                                 <div className={`exam details ${activeStatistic === 'Gabarito' ? 'active' : ''}`} onClick={() => showStatistics('Gabarito')}>Gabarito</div>
                             </div>
                         </div>
@@ -297,13 +326,24 @@ function QuestionGrid() {
                                     <p className='question-title'>{activeStatistic}</p>
                                     <div className='question-body'>
                                         {activeStatistic === 'Estatísticas da Questão' && <div className='question-details-image'><img src={questionStatistics}></img></div>}
-                                        {activeStatistic === 'Estatísticas do Aluno' && <div className='question-details-image'><img src={studentStatistics}></img></div>}
                                         {activeStatistic === 'Resolução em Vídeo' && (
                                             <div className='question-details-video'>
                                                 <video controls><source src={questionVideo} type="video/mp4" />Your browser does not support the video tag.</video>
                                             </div>
                                         )}
-                                        {activeStatistic === 'Gabarito' && <div className='question-details-answer'>{questionAnswer}</div>}
+                                        {activeStatistic === 'Resposta do Aluno' && (
+                                        <div className='question-details-answer'>
+                                            {userAnswers[selectedQuestion] || 'No answer available'}
+                                        </div>
+                                    )}
+
+                                    {activeStatistic === 'Gabarito' && (
+                                        <div className='question-details-answer'>
+                                            {questionAnswer}
+                                            <p className='comentario-gabarito'>{questionComentario}</p>    
+                                        </div>
+                                    )}
+
                                     </div>
                                     <button className="close-popup-button" onClick={hideStatistics}>Esconder {activeStatistic}</button>
                                 </div>

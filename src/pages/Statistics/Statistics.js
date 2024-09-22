@@ -13,26 +13,20 @@ function Statistics() {
     const [userName, setUserName] = useState(''); // Store user's name
     const userID = localStorage.getItem('userID'); // Fetch the userID from localStorage
     const selectedSimuladoID = localStorage.getItem('selectedSimuladoID'); // Fetch selected simulado from localStorage
+    const [totalQuestions, setTotalQuestions] = useState(0); // To store the total number of questions
 
     // Helper function to round the numbers to one decimal place
     const roundToOneDecimal = (number) => {
         return number ? Number(number).toFixed(1) : '-';  // Check if number exists, then round it
     };
 
-    // Helper function to convert date from dd/mm/yyyy to yyyy-mm-dd for sorting
-    const parseDate = (dateString) => {
-        const [day, month, year] = dateString.split('/');
-        return new Date(`${year}-${month}-${day}`);
-    };
-
     const isUnavailable = (info) => info === '-';
-
 
     // Fetch simulado data and performance for the most recent simulado or the selected simulado
     useEffect(() => {
         const fetchSimuladoData = async () => {
             try {
-                // Retrieve user's name from localStorage
+                // Fetch user name from localStorage
                 const storedUserName = localStorage.getItem('userName');
                 if (storedUserName) {
                     const firstName = storedUserName.split(' ')[0];
@@ -42,35 +36,37 @@ function Statistics() {
                 // Fetch the list of simulados for the user
                 const responseSimulado = await fetch(`https://rvcurso.com.br/get.php?action=get_simulados_by_aluno&ID_aluno=${userID}`);
                 const simuladoData = await responseSimulado.json();
-    
+                
                 // Map the simulado data into an array
                 const simuladosData = simuladoData.simulado_IDs.map((id, index) => ({
                     id,
                     date: simuladoData.simulado_datas[index],
                 }));
-    
+                
                 let selectedSimulado;
     
                 // Check if a simulado was previously selected
                 if (selectedSimuladoID) {
-                    // If a simulado is selected, find that simulado
                     selectedSimulado = simuladosData.find(simulado => simulado.id === selectedSimuladoID);
                 }
-    
+                
                 // If no simulado is selected or the selected one doesn't exist, use the last one
                 if (!selectedSimulado) {
                     selectedSimulado = simuladosData[simuladosData.length - 1];
                 }
-    
+                
                 // Set the selected simulado date
                 setSimuladoDate(selectedSimulado.date);
-    
-                // Fetch the performance data for the selected simulado
+                
+                // Fetch performance data
                 const responsePerformance = await fetch(`https://rvcurso.com.br/get.php?action=getPerformance&ID_usuario=${userID}&ID_prova=${selectedSimulado.id}`);
                 const performanceData = await responsePerformance.json();
+                const performanceInfo = performanceData[0];
                 
-                // Set the performance state
-                setPerformance(performanceData[0]);
+                // Set performance and total questions from performance data
+                setPerformance(performanceInfo);
+                setTotalQuestions(Number(performanceInfo.n_questoes));  // Use n_questoes for total questions
+                
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching simulado or performance data:', error);
@@ -84,8 +80,6 @@ function Statistics() {
             console.error('No userID found in localStorage.');
         }
     }, [userID, selectedSimuladoID]);
-    
-    
 
     if (loading) {
         return <div>Loading...</div>;  // Show a loading message until data is fetched
@@ -182,7 +176,6 @@ function Statistics() {
     )}
 </div>
 
-
                 <div className='summary-container'>
                     <div className='summary'>
                         <div className='info'>
@@ -191,12 +184,12 @@ function Statistics() {
                         </div>
 
                         <div className='info'>
-                            <p className='card-info' style={{ color: '#ff6767' }}>{180 - Acertos}</p> {/* Subtract correct answers to get incorrect/nulos */}
-                            <p className='card-title'>erros/nulos</p>
+                            <p className='card-info' style={{ color: '#ff6767' }}>{totalQuestions - Acertos}</p> {/* Subtract correct answers to get incorrect/nulos */}
+                            <p className='card-title'>erros</p>
                         </div>
 
                         <div className='info'>
-                            <p className='card-info'>{180}</p>
+                            <p className='card-info'>{totalQuestions}</p>  {/* Total number of questions */}
                             <p className='card-title'>questões ao todo</p>
                         </div>
                     </div>
