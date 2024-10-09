@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
@@ -11,6 +11,7 @@ import './Sidebar.css';
 function Sidebar() {
 
   const [firstAccess, setFirstAccess] = useState(true);
+  const navigate = useNavigate();
 
     useEffect(() => {
         const storedFirstAccess = localStorage.getItem('firstAccess');
@@ -18,6 +19,13 @@ function Sidebar() {
             setFirstAccess(false);
         }
     }, []);
+
+    const handleLogout = () => {
+      // Clear localStorage
+      localStorage.clear();
+      // Redirect to login page
+      navigate('/login');
+    };
 
   return (
     <div className="sidebar">
@@ -55,7 +63,7 @@ function Sidebar() {
           </li>
 
 
-          <li>
+          <li onClick={handleLogout}>
             <Link to="/login" className='logout'>
                 <LogoutOutlinedIcon style={{ color: '#fff', fontSize: 45 }} />
             </Link>

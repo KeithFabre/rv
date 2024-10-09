@@ -1,6 +1,7 @@
 {
   "name": "front",
   "version": "0.1.0",
+  "homepage": "https://rvcurso.com.br",
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.0.5",

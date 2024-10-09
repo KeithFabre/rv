@@ -150,10 +150,10 @@ const generateQuestions = async () => {
     };
 
     const abbreviateSubject = (subject) => {
-        if (subject === 'matematica') return 'Mat.';
-        if (subject === 'biologia') return 'Bio.';
-        if (subject === 'quimica') return 'Quim.';
-        if (subject === 'fisica') return 'Fis.';
+        if (subject === 'matematica') return 'Mat';
+        if (subject === 'biologia') return 'Bio';
+        if (subject === 'quimica') return 'Qui';
+        if (subject === 'fisica') return 'Fis';
         return subject; // Return subject as is for all other subjects
     };
     
@@ -227,7 +227,7 @@ const generateQuestions = async () => {
                                 <FilterListOutlinedIcon style={{ color: '#242828', fontSize: 35 }} className='filter-icon' />
                                     {isDropdownVisible && (
                                         <div className="dropdown">
-                                            <div className='dropdown-item' onClick={() => handleSortChange('chronological')}>1-45</div>
+                                            <div className='dropdown-item' onClick={() => handleSortChange('chronological')}>1,2,3,...</div>
                                             <div className='dropdown-item' onClick={() => handleSortChange('correct-first')}>Corretas</div>
                                             <div className='dropdown-item' onClick={() => handleSortChange('wrong-first')}>Erradas</div>
                                         </div>
@@ -291,9 +291,20 @@ const generateQuestions = async () => {
                     {expandedExam === 'R' ? (
                         <div className="question-box-container">
                             <div className="question-box">
-                                <p className='question-title'>Redação Corrigida</p>
+                                <p className='question-title'>A Revolução do Miojo na Alimentação Contemporânea</p>
                                 <p className='question-body'>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel fermentum libero.
+
+                                 {/* <br/><br/> */}
+
+                                    O miojo, conhecido por sua praticidade e preço acessível, tornou-se um dos alimentos mais populares do mundo. Inventado em 1958 pelo japonês Momofuku Ando, o macarrão instantâneo rapidamente conquistou adeptos em diversas culturas, devido à sua rapidez no preparo, baixo custo e versatilidade. Contudo, o sucesso do miojo reflete questões mais profundas relacionadas à alimentação contemporânea, como a necessidade de refeições rápidas em uma sociedade marcada pela correria e o impacto dessa escolha na saúde pública.
+                                    <br/>
+Um dos fatores que explica a popularização do miojo é a transformação do ritmo de vida moderno. Com a urbanização acelerada e a inserção crescente de homens e mulheres no mercado de trabalho, a alimentação passou a ser uma questão de conveniência. Nesse contexto, alimentos rápidos e prontos, como o miojo, preenchem uma lacuna importante. O tempo, antes dedicado ao preparo das refeições, foi substituído pela necessidade de refeições instantâneas, criando uma cultura de consumo voltada para a agilidade e a praticidade.
+<br/>
+Entretanto, apesar de ser uma solução prática, o consumo excessivo de alimentos industrializados, como o miojo, traz à tona discussões sobre a saúde pública. Pesquisas indicam que o macarrão instantâneo possui altos níveis de sódio, gorduras saturadas e aditivos químicos, os quais podem contribuir para o desenvolvimento de doenças crônicas, como hipertensão e problemas cardiovasculares. O desafio, portanto, é equilibrar a conveniência com escolhas alimentares saudáveis, um dilema cada vez mais presente em sociedades urbanizadas.
+<br/>
+Além disso, a questão do miojo também toca em pontos importantes sobre o acesso à alimentação. Em regiões de baixa renda, o macarrão instantâneo se tornou uma opção viável para quem não dispõe de recursos financeiros ou tempo para preparar refeições mais elaboradas. Nesse sentido, a popularidade do miojo reflete a desigualdade socioeconômica, evidenciando que muitas pessoas optam por soluções rápidas por falta de acesso a alimentos mais nutritivos e frescos.
+<br/>
+Em suma, o miojo simboliza tanto as mudanças sociais e econômicas quanto os desafios da alimentação moderna. Seu impacto vai além da conveniência, abordando questões de saúde e desigualdade. Para avançar em direção a um futuro mais saudável e equilibrado, é essencial promover políticas públicas que incentivem a educação alimentar e o acesso a uma dieta mais nutritiva e acessível, sem deixar de lado a necessidade de praticidade no dia a dia.
                                 </p>
                             </div>
                         </div>

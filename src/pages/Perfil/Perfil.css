@@ -22,6 +22,8 @@
     padding: 20px;
     border-radius: var(--card-radius);
     margin: 2rem;
+    margin-top: 17%;
+    margin-left: 0rem;
 }
 
 .saludation-svg.profile {
