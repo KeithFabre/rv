@@ -11,19 +11,15 @@ function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault(); // Prevent form submission from reloading the page
+
+
         try {
-            const response = await fetch('https://rvcurso.com.br/login.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    email: email,
-                    password: password,
-                }),
-            });
+
+            const response = await fetch(`https://rvcurso.com.br/get.php?action=login&email=${email}&password=${password}`
+            );
 
             const data = await response.json();
+            console.log(data)
 
             if (data.status === 0) {
                 // Store ID and name in localStorage
@@ -31,15 +27,22 @@ function Login() {
                 localStorage.setItem('userName', data.nome);
 
                 // Login successful, navigate to the profile page
-                navigate('/perfil', { state: { userID: data.ID_usuario, userName: data.nome } });
+                // coloquei / por enquanto, depois voltar pra /perfil 
+                // quando mandar pra /perfil ele vai contar uns segundos e depois
+                // redirecionar pro /
+                navigate('/', { state: { userID: data.ID_usuario, userName: data.nome } });
             } else {
                 // Login failed, show an error message
-                setErrorMessage('Login failed. Please check your credentials.');
+                setErrorMessage('Login falhou. Cheque suas credenciais.');
             }
         } catch (error) {
-            console.error('Error during login:', error);
-            setErrorMessage('An error occurred. Please try again later.');
+            console.error('Erro ao logar: ', error);
+            setErrorMessage('Um erro ocorreu. Tente novamente mais tarde.');
         }
+
+
+
+        
     };
 
     return (
@@ -72,7 +75,7 @@ function Login() {
                         Entrar
                     </button>
 
-                    <Link to="/cadastro" className="no-link-style">
+                    {/* <Link to="/cadastro" className="no-link-style">
                         <div className='link-cadastro'>
                             Cadastre-se aqui
                         </div>
@@ -82,7 +85,9 @@ function Login() {
                         <div className='link-cadastro esqueci-senha'>
                             Esqueci a Senha
                         </div>
-                    </Link>
+                    </Link> */}
+
+
                 </form>
             </div>
         </div>

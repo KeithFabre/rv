@@ -9,6 +9,7 @@ import Login from './pages/Login/Login';
 import Cadastro from './pages/Cadastro/Cadastro';
 import EsqueciSenha from './pages/EsqueciSenha/EsqueciSenha';
 import Perfil from './pages/Perfil/Perfil';
+import Ranking from './pages/Ranking/Ranking';
 
 const ProtectedRoutes = ({ children }) => {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ const ProtectedRoutes = ({ children }) => {
     useEffect(() => {
         const userID = localStorage.getItem('userID');
         if (!userID) {
-            navigate('/login'); // Redirect to login if no userID
+            navigate('/login'); 
         }
     }, [navigate]);
 
@@ -31,9 +32,8 @@ function App() {
                 <Route path="/cadastro" element={<Cadastro />} />
                 <Route path="/esqueciasenha" element={<EsqueciSenha />} />
 
-                {/* Protected routes */}
                 <Route 
-                    path="/" 
+                    path="/dashboard" 
                     element={
                         <ProtectedRoutes>
                             <Statistics />
@@ -56,8 +56,18 @@ function App() {
                         </ProtectedRoutes>
                     } 
                 />
+
                 <Route 
-                    path="/perfil" 
+                    path="/ranking" 
+                    element={
+                        <ProtectedRoutes>
+                            <Ranking />
+                        </ProtectedRoutes>
+                    } 
+                />
+
+                <Route 
+                    path="/" 
                     element={
                         <ProtectedRoutes>
                             <Perfil />

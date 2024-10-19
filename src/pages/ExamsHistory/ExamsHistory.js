@@ -4,22 +4,22 @@ import { Link } from 'react-router-dom';
 import './ExamsHistory.css';
 
 function ExamHistory() {
-    // State to hold the list of simulados and their performance data
+    
     const [simulados, setSimulados] = useState([]);
     const [simuladoPerformances, setSimuladoPerformances] = useState({});
-    const userID = localStorage.getItem('userID'); // Get the userID from localStorage
+    const userID = localStorage.getItem('userID'); 
 
-    // Helper function to convert date from dd/mm/yyyy to yyyy-mm-dd for sorting
+    
     const parseDate = (dateString) => {
         const [day, month, year] = dateString.split('/');
         return new Date(`${year}-${month}-${day}`);
     };
 
-    // Fetch simulados when the component mounts
+
     useEffect(() => {
         const fetchSimulados = async () => {
             if (!userID) {
-                console.error('No userID found in localStorage.');
+                console.error('Nenhum ID de usuário encontrado');
                 return;
             }
 
@@ -30,7 +30,6 @@ function ExamHistory() {
                 const simuladoNames = data.simulado_names;
                 const simuladoDates = data.simulado_datas;
 
-                // Combine the IDs, names, and dates into one array and sort by date (most recent first)
                 const simuladosData = simuladoIDs.map((id, index) => ({
                     id,
                     name: simuladoNames[index],
@@ -39,7 +38,6 @@ function ExamHistory() {
 
                 setSimulados(simuladosData);
 
-                // Fetch performance for each simulado
                 for (let simulado of simuladosData) {
                     const performanceResponse = await fetch(
                         `https://rvcurso.com.br/get.php?action=getPerformance&ID_usuario=${userID}&ID_prova=${simulado.id}`
@@ -47,24 +45,23 @@ function ExamHistory() {
                     const performanceData = await performanceResponse.json();
                     setSimuladoPerformances((prevPerformances) => ({
                         ...prevPerformances,
-                        [simulado.id]: performanceData[0],  // Assuming the first item is the relevant one
+                        [simulado.id]: performanceData[0],  
                     }));
                 }
             } catch (error) {
-                console.error('Error fetching simulados or performance data:', error);
+                console.error('Erro ao buscar simulados ou dados de performance: ', error);
             }
         };
 
         fetchSimulados();
     }, [userID]);
 
-    // Handle simulado card click: store the selected simulado ID in localStorage
     const handleSimuladoClick = (simuladoID) => {
-        localStorage.setItem('selectedSimuladoID', simuladoID); // Store the clicked simulado ID
+        localStorage.setItem('selectedSimuladoID', simuladoID); 
     };
 
     const roundToOneDecimal = (number) => {
-        return number ? Number(number).toFixed(1) : '-';  // Check if number exists, then round it
+        return number ? Number(number).toFixed(1).replace('.', ',') : '-';  
     };
 
     return (
@@ -73,19 +70,21 @@ function ExamHistory() {
                 <Sidebar />
             </div>
             <div className='exam-history-container'>
-                {simulados.map((simulado) => {
+                {simulados.map((simulado, index) => {
                     const performance = simuladoPerformances[simulado.id];
                     const mediaSemRedacao = roundToOneDecimal(performance?.Notas?.Media_sem_redacao);
                     const mediaComRedacao = roundToOneDecimal(performance?.Notas?.Media_com_redacao);
 
+                    const mostRecentClass = index === 0 ? 'most-recent' : '';
+
                     return (
                         <Link
-                            to="/" // Adjust the link as per your routing setup
+                            to="/dashboard" 
                             className="no-link-style"
                             key={simulado.id}
-                            onClick={() => handleSimuladoClick(simulado.id)} // Store the clicked simulado ID
+                            onClick={() => handleSimuladoClick(simulado.id)} 
                         >
-                            <div className='exam-history'>
+                            <div className={`exam-history ${mostRecentClass}`}>
                                 <div className='exam-date'>
                                     Simulado realizado em {simulado.date}
                                 </div>

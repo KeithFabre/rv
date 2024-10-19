@@ -4,7 +4,11 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import logo from '../../assets/230616_RV_logo_restrito_negativo-branco.png';
+
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import SignalCellularAltOutlinedIcon from '@mui/icons-material/SignalCellularAltOutlined';
 
 import './Sidebar.css';
 
@@ -20,6 +24,8 @@ function Sidebar() {
         }
     }, []);
 
+
+    // melhorar isso aqui
     const handleLogout = () => {
       // Clear localStorage
       localStorage.clear();
@@ -32,33 +38,41 @@ function Sidebar() {
       <div className='sidebar-content'>
         <ul>
             <li>
+            <Link to="/">
               <img src={logo} alt="Logo" className='logo-image' />
+            </Link>              
             </li>
 
-
-            {!firstAccess && (
-
               <li>
-                <Link to="/">
-                    <HomeOutlinedIcon style={{ color: '#fff', fontSize: 45 }} className='sidebar-icon' />
+                <Link to="/dashboard">
+                    <DescriptionOutlinedIcon style={{ color: '#fff', fontSize: 45 }} className='sidebar-icon' />
                 </Link>
             </li>
 
-            )}
+            {/* {!firstAccess && (
+            )} */}
 
-            {!firstAccess && (
-                      <li>
-                        <Link to="/historico">
-                        <FormatListNumberedOutlinedIcon style={{ color: '#fff', fontSize: 40 }} className='sidebar-icon' />
-                        </Link>
-                      </li>
-            )}
+                <li>
+                  <Link to="/historico">
+                  <SignalCellularAltOutlinedIcon style={{ color: '#fff', fontSize: 40 }} className='sidebar-icon' />
+                  </Link>
+                </li>
+
+
+            {/* {!firstAccess && (
+            )} */}
 
           
 
-          <li>
+          {/* <li>
             <Link to="/perfil">
             <PersonOutlineOutlinedIcon style={{ color: '#fff', fontSize: 40 }} className='sidebar-icon' />
+            </Link>
+          </li> */}
+
+          <li>
+            <Link to="/ranking">
+            <EmojiEventsOutlinedIcon style={{ color: '#fff', fontSize: 40 }} className='sidebar-icon' />
             </Link>
           </li>
 

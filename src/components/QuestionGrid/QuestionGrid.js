@@ -4,27 +4,31 @@ import './QuestionGrid.css';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropDown';
-import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
+import PlayCircleFilledWhiteOutlinedIcon from '@mui/icons-material/PlayCircleFilledWhiteOutlined';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 function QuestionGrid() {
     const [selectedQuestion, setSelectedQuestion] = useState(null);
-    const [questionStatus, setQuestionStatus] = useState([]); // Status of correct/incorrect
-    const [isCollapsed, setIsCollapsed] = useState(false); // Collapse/Expand the grid
-    const [sortOrder, setSortOrder] = useState('chronological'); // Sorting order
+    const [questionStatus, setQuestionStatus] = useState([]); 
+    const [isCollapsed, setIsCollapsed] = useState(false); 
+    const [sortOrder, setSortOrder] = useState('chronological'); 
     const [isDropdownVisible, setIsDropdownVisible] = useState(false); 
-    const [activeStatistic, setActiveStatistic] = useState(null); // For statistics
+    const [activeStatistic, setActiveStatistic] = useState(null); 
 
     const [questionImage, setQuestionImage] = useState(null); 
     const [questionStatistics, setQuestionStatistics] = useState(null); 
     const [studentStatistics, setStudentStatistics] = useState(null); 
     const [questionVideo, setQuestionVideo] = useState(null); 
     const [questionAnswer, setQuestionAnswer] = useState(null); 
-    const [questionSubjects, setQuestionSubjects] = useState({}); // Holds the subject data
-    const [availableQuestions, setAvailableQuestions] = useState({}); // Track available questions
+    const [questionSubjects, setQuestionSubjects] = useState({}); 
+    const [availableQuestions, setAvailableQuestions] = useState({}); 
     const [hasVideo, setHasVideo] = useState({});
-    const [userAnswers, setUserAnswers] = useState({}); // To store student answers
-    const [questionComentario, setQuestionComentario] = useState(''); // To store the comentario from question details
-    const [questionAnswers, setQuestionAnswers] = useState({}); // Store correct answers (gabaritos) for each question
+    const [userAnswers, setUserAnswers] = useState({}); 
+    const [questionComentario, setQuestionComentario] = useState(''); 
+    const [questionAnswers, setQuestionAnswers] = useState({}); 
+
+    const [activeFilter, setActiveFilter] = useState('chronological'); 
 
 
     const location = useLocation();
@@ -37,7 +41,7 @@ function QuestionGrid() {
     }, []);
 
     useEffect(() => {
-        // Handle clicks outside the dropdown
+        
         const handleClickOutside = (event) => {
             if (examSelectorRef.current && !examSelectorRef.current.contains(event.target)) {
                 setIsDropdownVisible(false); 
@@ -67,7 +71,6 @@ const generateQuestions = async () => {
         const userAnswers = performanceData[0]?.Respostas;
 
         if (!userAnswers) {
-            console.error('No answers found for user');
             return;
         }
 
@@ -97,9 +100,9 @@ const generateQuestions = async () => {
         setQuestionSubjects(subjects);
         setAvailableQuestions(availableQuestionsTemp);
         setHasVideo(hasVideoTemp);
-        setQuestionAnswers(answersTemp);  // Set the correct answers in the state
+        setQuestionAnswers(answersTemp);  
     } catch (error) {
-        console.error('Error fetching user performance or question data:', error);
+        console.error('Erro ao buscar performance do usuário ou dados de questão: ', error);
     }
 };
 
@@ -118,7 +121,7 @@ const generateQuestions = async () => {
                 setQuestionStatistics(data.link_statistics); 
                 setStudentStatistics(data.link_statistics);
                 setQuestionVideo(data.link_resolution_video);
-                setQuestionComentario(data.comentario);  // Store comentario in state
+                setQuestionComentario(data.comentario);  
             } else {
                 console.error('Data not found for question:', questionNumber);
             }
@@ -146,8 +149,10 @@ const generateQuestions = async () => {
 
     const handleSortChange = (order) => {
         setSortOrder(order);
-        setIsDropdownVisible(false); 
+        setActiveFilter(order); 
+        setIsDropdownVisible(false);
     };
+    
 
     const abbreviateSubject = (subject) => {
         if (subject === 'matematica') return 'Mat';
@@ -175,18 +180,21 @@ const generateQuestions = async () => {
             end = 180;
         }
     
-        const questions = Array.from({ length: end - start + 1 }, (_, index) => start + index); // Create an array of question numbers
+        // Create an array of question numbers in chronological order
+        const questions = Array.from({ length: end - start + 1 }, (_, index) => start + index);
     
-        if (sortOrder === 'chronological') {
-            return questions;
-        } else if (sortOrder === 'correct-first') {
-            return questions.sort((a, b) => (questionStatus[a] === 'correct' ? -1 : 1));
+        // Apply sorting based on the selected order, maintaining chronological order within groups
+        if (sortOrder === 'correct-first') {
+            return questions.filter(q => questionStatus[q] === 'correct')
+                            .concat(questions.filter(q => questionStatus[q] !== 'correct'));
         } else if (sortOrder === 'wrong-first') {
-            return questions.sort((a, b) => (questionStatus[a] === 'incorrect' ? -1 : 1));
+            return questions.filter(q => questionStatus[q] === 'incorrect')
+                            .concat(questions.filter(q => questionStatus[q] !== 'incorrect'));
         }
     
-        return questions;
+        return questions; // Default to chronological order
     };
+    
 
     const sortedQuestions = getSortedQuestions();
 
@@ -194,13 +202,30 @@ const generateQuestions = async () => {
         setIsDropdownVisible(!isDropdownVisible);
     };
 
-    const showStatistics = (type) => {
-        setActiveStatistic(type);
+    const toggleStatistics = (type) => {
+        setActiveStatistic((prevStatistic) => (prevStatistic === type ? null : type));
     };
 
-    const hideStatistics = () => {
-        setActiveStatistic(null);
+    // Navigate to the next question
+    const handleNextQuestion = () => {
+        const currentIndex = sortedQuestions.indexOf(selectedQuestion);
+        if (currentIndex < sortedQuestions.length - 1) {
+            const nextQuestion = sortedQuestions[currentIndex + 1];
+            setSelectedQuestion(nextQuestion);
+            fetchQuestionData(nextQuestion); // Update the question data
+        }
     };
+
+    // Navigate to the previous question
+    const handlePreviousQuestion = () => {
+        const currentIndex = sortedQuestions.indexOf(selectedQuestion);
+        if (currentIndex > 0) {
+            const prevQuestion = sortedQuestions[currentIndex - 1];
+            setSelectedQuestion(prevQuestion);
+            fetchQuestionData(prevQuestion); // Update the question data
+        }
+    };
+
 
     return (
         <div className="questions-container">
@@ -219,18 +244,37 @@ const generateQuestions = async () => {
                         <Link to="/detalhes" state={{ expandedExam: 'MT' }} className="no-link-style" onClick={handleLinkClick}>
                             <div className='exam'>{expandedExam === 'MT' ? 'Matemática e suas Tecnologias' : 'MT'}</div>
                         </Link>
-                        <Link to="/detalhes" state={{ expandedExam: 'R' }} className="no-link-style" onClick={handleLinkClick}>
+
+                        {/* <Link to="/detalhes" state={{ expandedExam: 'R' }} className="no-link-style" onClick={handleLinkClick}>
                             <div className='exam'>{expandedExam === 'R' ? 'Redação' : 'RE'}</div>
-                        </Link>
+                        </Link> */}
+
+
                         {(expandedExam !== 'R') && (
                             <div className='filter-icon' onClick={toggleDropdown}>
                                 <FilterListOutlinedIcon style={{ color: '#242828', fontSize: 35 }} className='filter-icon' />
                                     {isDropdownVisible && (
                                         <div className="dropdown">
-                                            <div className='dropdown-item' onClick={() => handleSortChange('chronological')}>1,2,3,...</div>
-                                            <div className='dropdown-item' onClick={() => handleSortChange('correct-first')}>Corretas</div>
-                                            <div className='dropdown-item' onClick={() => handleSortChange('wrong-first')}>Erradas</div>
+                                        <div
+                                            className={`dropdown-item ${activeFilter === 'chronological' ? 'active-filter' : ''}`}
+                                            onClick={() => handleSortChange('chronological')}
+                                        >
+                                            1,2,3,...
                                         </div>
+                                        <div
+                                            className={`dropdown-item ${activeFilter === 'correct-first' ? 'active-filter' : ''}`}
+                                            onClick={() => handleSortChange('correct-first')}
+                                        >
+                                            Corretas
+                                        </div>
+                                        <div
+                                            className={`dropdown-item ${activeFilter === 'wrong-first' ? 'active-filter' : ''}`}
+                                            onClick={() => handleSortChange('wrong-first')}
+                                        >
+                                            Erradas
+                                        </div>
+                                    </div>
+                                    
                                     )}
                             </div>
                         )}
@@ -240,27 +284,26 @@ const generateQuestions = async () => {
                 <div className="grid-container">
                     {expandedExam !== 'R' ? (
                         <div className='question-container'> 
+
                             <div className={`grid ${isCollapsed ? 'collapsed' : 'expanded'}`}>
                             {sortedQuestions.map((questionNumber, index) => (
                                 (!isCollapsed || selectedQuestion === questionNumber) && (
                                     <div
-  key={questionNumber}
-  className={`square ${questionAnswers[questionNumber] === 'X' ? 'anulada' : ''} ${availableQuestions[questionNumber] ? questionStatus[questionNumber] : 'unavailable'} ${selectedQuestion === questionNumber ? 'selected' : ''}`}
-  onClick={() => handleQuestionClick(questionNumber)}
-  style={{ cursor: availableQuestions[questionNumber] ? 'pointer' : 'default' }} // Make unclickable if not in availableQuestions
->
-  {questionNumber}
-  <span className={`subject ${questionStatus[questionNumber]}`}>
-    <span className="first-letter">{abbreviateSubject(questionSubjects[questionNumber])}</span>
-  </span>
-  {hasVideo[questionNumber] && (  // Only show the icon if the video is available
-    <span className={`camera-icon ${questionStatus[questionNumber]}`}>
-      <CameraAltOutlinedIcon style={{ fontSize: 15 }} />
-    </span>
-  )}
-</div>
-
-
+                                        key={questionNumber}
+                                        className={`square ${questionAnswers[questionNumber] === 'X' ? 'anulada' : ''} ${availableQuestions[questionNumber] ? questionStatus[questionNumber] : 'unavailable'} ${selectedQuestion === questionNumber ? 'selected' : ''}`}
+                                        onClick={() => handleQuestionClick(questionNumber)}
+                                        style={{ cursor: availableQuestions[questionNumber] ? 'pointer' : 'default' }} // Make unclickable if not in availableQuestions
+                                        >
+                                        {questionNumber}
+                                        <span className={`subject ${questionStatus[questionNumber]}`}>
+                                            <span className="first-letter">{abbreviateSubject(questionSubjects[questionNumber])}</span>
+                                        </span>
+                                        {hasVideo[questionNumber] && (  
+                                            <span className={`camera-icon ${questionStatus[questionNumber]}`}>
+                                            <PlayCircleFilledWhiteOutlinedIcon style={{ fontSize: 17 }} />
+                                            </span>
+                                        )}
+                                    </div>
                                 )
                             ))}
 
@@ -269,20 +312,57 @@ const generateQuestions = async () => {
                                         className="square toggle-square"
                                         onClick={toggleCollapse}
                                     >
-                                        {isCollapsed ? <ArrowDropDownIcon style={{ color: '#242828', fontSize: 50 }} /> : <ArrowDropUpIcon style={{ color: '#242828', fontSize: 50 }} />}
+                                        {isCollapsed ? <ArrowDropUpIcon style={{ color: '#242828', fontSize: 50 }} /> : <ArrowDropDownIcon style={{ color: '#242828', fontSize: 50 }} />}
                                     </div>
                                 )}
+
+                                {selectedQuestion !== null && (
+                                    
+                                
+                                <button
+                                        className="arrow-button left-arrow"
+                                        onClick={handlePreviousQuestion}
+                                        disabled={selectedQuestion === sortedQuestions[0]}
+                                    >
+                                        <ArrowBackIosIcon />
+                                    </button>
+                                
+                                )}
+
+                                {selectedQuestion !== null && (
+                                    
+                                    <button
+                                    className="arrow-button right-arrow"
+                                    onClick={handleNextQuestion}
+                                    disabled={selectedQuestion === sortedQuestions[sortedQuestions.length - 1]}
+                                >
+                                    <ArrowForwardIosIcon />
+                            </button>
+
+                                )}
+
+
+
                             </div>
 
                             {selectedQuestion !== null && (
                                 <div className="question-box-container">
+
+
                                     <div className={`question-box ${isCollapsed ? 'collapsed' : ''}`}>
+
                                         <div className='question-img-container'>
                                             <img src={questionImage} className="question-img" />
                                         </div>
+
                                     </div>
+
+
                                 </div>
                             )}
+
+
+
                         </div>
                     ) : null}
                 </div>
@@ -318,48 +398,92 @@ Em suma, o miojo simboliza tanto as mudanças sociais e econômicas quanto os de
                         <div className="question-sidebar-statistic-container">
                             <p className='question-sidebar-title'>Detalhes da Questão {selectedQuestion}</p>
                             <div className="question-buttons-container">
-                                <div className={`exam details ${activeStatistic === 'Estatísticas da Questão' ? 'active' : ''}`} onClick={() => showStatistics('Estatísticas da Questão')}>Estatísticas da Questão</div>
+
+
+                                
+                                <div className={`exam details ${activeStatistic === 'Estatísticas da Questão' ? 'active' : ''}`} onClick={() => toggleStatistics('Estatísticas da Questão')}>Estatísticas da Questão</div>
+                                
+                                {activeStatistic && (
+                                    <div className="popup-overlay">
+                                        <div className="popup-content">
+                                            <div className='question-body'>
+                                                {activeStatistic === 'Estatísticas da Questão' && <div className='question-details-image'><img src={questionStatistics}></img></div>}
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                )}
+         
+                                
                                 <div
                                     className={`exam details ${activeStatistic === 'Resolução em Vídeo' ? 'active' : ''} ${!hasVideo[selectedQuestion] ? 'unavailable' : ''}`}
-                                    onClick={() => hasVideo[selectedQuestion] && showStatistics('Resolução em Vídeo')}
+                                    onClick={() => hasVideo[selectedQuestion] && toggleStatistics('Resolução em Vídeo')}
                                 >
                                     Resolução em Vídeo
                                 </div>
-                                <div className={`exam details ${activeStatistic === 'Resposta do Aluno' ? 'active' : ''}`} onClick={() => showStatistics('Resposta do Aluno')}>Resposta do Aluno</div>
+
+                                {activeStatistic && (
+                            <div className="popup-overlay">
+                                <div className="popup-content">
+                                    <div className='question-body'>
+                                        {activeStatistic === 'Resolução em Vídeo' && (
+                                            <div className='question-details-video'>
+                                                {hasVideo[selectedQuestion] && (
+                                                    <video controls key={questionVideo} autoPlay>
+                                                        <source src={questionVideo} type="video/mp4" />Seu browser não suporta a tag de video.
+                                                    </video>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                                )}
+
                                 
-                                <div className={`exam details ${activeStatistic === 'Gabarito' ? 'active' : ''}`} onClick={() => showStatistics('Gabarito')}>Gabarito</div>
+                                <div className={`exam details ${activeStatistic === 'Resposta do Aluno' ? 'active' : ''}`} onClick={() => toggleStatistics('Resposta do Aluno')}>Resposta do Aluno</div>
+                                {activeStatistic && (
+                                    <div className="popup-overlay">
+                                        <div className="popup-content">
+                                            <div className='question-body'>
+                                                
+                                                {activeStatistic === 'Resposta do Aluno' && (
+                                                <div className='question-details-answer'>
+                                                    {userAnswers[selectedQuestion] || 'No answer available'}
+                                                </div>
+                                            )}
+
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                )}
+
+                                
+                                <div className={`exam details ${activeStatistic === 'Gabarito' ? 'active' : ''}`} onClick={() => toggleStatistics('Gabarito')}>Gabarito</div>
+                                {activeStatistic && (
+                                    <div className="popup-overlay">
+                                        <div className="popup-content">
+                                            <div className='question-body'>
+                                            
+                                            {activeStatistic === 'Gabarito' && (
+                                                <div className='question-details-answer'>
+                                                    {questionAnswer}
+                                                    <p className='comentario-gabarito'>{questionComentario}</p>    
+                                                </div>
+                                            )}
+
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                )}                                
+
+
+
                             </div>
                         </div>
 
-                        {activeStatistic && (
-                            <div className="popup-overlay">
-                                <div className="popup-content">
-                                    <p className='question-title'>{activeStatistic}</p>
-                                    <div className='question-body'>
-                                        {activeStatistic === 'Estatísticas da Questão' && <div className='question-details-image'><img src={questionStatistics}></img></div>}
-                                        {activeStatistic === 'Resolução em Vídeo' && (
-                                            <div className='question-details-video'>
-                                                <video controls><source src={questionVideo} type="video/mp4" />Your browser does not support the video tag.</video>
-                                            </div>
-                                        )}
-                                        {activeStatistic === 'Resposta do Aluno' && (
-                                        <div className='question-details-answer'>
-                                            {userAnswers[selectedQuestion] || 'No answer available'}
-                                        </div>
-                                    )}
-
-                                    {activeStatistic === 'Gabarito' && (
-                                        <div className='question-details-answer'>
-                                            {questionAnswer}
-                                            <p className='comentario-gabarito'>{questionComentario}</p>    
-                                        </div>
-                                    )}
-
-                                    </div>
-                                    <button className="close-popup-button" onClick={hideStatistics}>Esconder {activeStatistic}</button>
-                                </div>
-                            </div>
-                        )}
                     </div>
                 )}
             </div>

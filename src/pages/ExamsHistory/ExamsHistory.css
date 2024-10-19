@@ -9,7 +9,7 @@
     flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 3.5rem;
 }
 
 .exam-history {
@@ -25,7 +25,12 @@
 }
 
 .exam-history:hover {
-    box-shadow: var(--card-hover)
+    box-shadow: var(--card-hover);
+}
+
+.exam-history.most-recent {
+    /* border: solid 3px rgba(249, 209, 63, 0.5); */
+    box-shadow: rgba(255, 215, 0, 0.7) 0px 2px 40px 0px;
 }
 
 .exam-date {

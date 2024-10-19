@@ -6,8 +6,11 @@ import EqualizerIcon from '@mui/icons-material/Equalizer';
 
 
 function InfoCard({ title, info }) {
+
+    const cardUnavailable = info === '-'; 
+
     return (
-        <div className='info-card'>
+        <div className={`info-card ${cardUnavailable ? 'unavailable' : ''}`}>
             <div className='icon-container'>
                 <EqualizerIcon className='icon' style={{ fontSize: 50 }} />
             </div>

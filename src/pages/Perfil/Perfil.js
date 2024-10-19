@@ -14,18 +14,21 @@ function Perfil() {
         const storedFirstAccess = localStorage.getItem('firstAccess');
         const storedUserName = localStorage.getItem('userName'); // Retrieve user's name from localStorage
 
+        // pra tirar página de primeiro acesso, voltar pra set(false depois)
         if (storedFirstAccess === 'false') {
-            setFirstAccess(false);
+            setFirstAccess(true);
         }
 
         if (storedUserName) {
-            setUserName(storedUserName); // Set the user's name
+            setUserName(storedUserName); 
+            // coloquei pra tirar página de primeiro acesso
+            localStorage.setItem('firstAccess', 'false');
         }
     }, []);
 
     const handleFinalizeCadastro = () => {
         // Set firstAccess to false and update localStorage
-        setFirstAccess(false);
+        setFirstAccess(true);
         localStorage.setItem('firstAccess', 'false');
     };
 
@@ -34,10 +37,10 @@ function Perfil() {
             <div className='menu'>
                 <Sidebar />
             </div>
-            <div className='profile-container'>
-            {firstAccess && (
+            <div className='content'>
+            {/* {firstAccess && (
                 <div className='form-profile'>
-                    <h1>Olá, {userName}!</h1> {/* Replace [usuário] with userName */}
+                    <h1>Olá, {userName}!</h1> 
                     <h3>Finalize seu cadastro</h3>
                     <Link to="/">
                         <button className='button first-access' onClick={handleFinalizeCadastro}>
@@ -45,14 +48,14 @@ function Perfil() {
                         </button>
                     </Link>
                 </div>
-            )}
-
-            {!firstAccess && (
+            )} */}
                 <div className='user-info'>
                     <h2>Olá, {userName}!</h2> 
                     <SaludationSvg className='saludation-svg profile'/>   
                 </div>
-            )}
+
+            {/* {!firstAccess && (
+            )} */}
 
             </div>
         </div>

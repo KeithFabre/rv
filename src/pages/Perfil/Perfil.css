@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* flex-direction: column; */
+    background-color: pink;
 }
 
 .button.first-access {
@@ -15,14 +15,13 @@
 .form-profile, 
 .user-info {
     background-color: var(--card-color);
+    border-radius: var(--card-radius);
     width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    border-radius: var(--card-radius);
     margin: 2rem;
-    margin-top: 17%;
     margin-left: 0rem;
 }
 

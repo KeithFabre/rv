@@ -10,34 +10,36 @@ function Statistics() {
     const [performance, setPerformance] = useState(null);
     const [simuladoDate, setSimuladoDate] = useState('');
     const [loading, setLoading] = useState(true);
-    const [userName, setUserName] = useState(''); // Store user's name
-    const userID = localStorage.getItem('userID'); // Fetch the userID from localStorage
-    const selectedSimuladoID = localStorage.getItem('selectedSimuladoID'); // Fetch selected simulado from localStorage
-    const [totalQuestions, setTotalQuestions] = useState(0); // To store the total number of questions
+    const [userName, setUserName] = useState(''); 
+    const userID = localStorage.getItem('userID'); 
+    const selectedSimuladoID = localStorage.getItem('selectedSimuladoID'); 
+    const [totalQuestions, setTotalQuestions] = useState(0); 
+    const [nullQuestions, setNullQuestions] = useState(0); 
 
-    // Helper function to round the numbers to one decimal place
+    
     const roundToOneDecimal = (number) => {
-        return number ? Number(number).toFixed(1) : '-';  // Check if number exists, then round it
+        return number ? Number(number).toFixed(1).replace('.', ',') : '-';  
     };
 
     const isUnavailable = (info) => info === '-';
 
-    // Fetch simulado data and performance for the most recent simulado or the selected simulado
+
     useEffect(() => {
         const fetchSimuladoData = async () => {
             try {
-                // Fetch user name from localStorage
+                
                 const storedUserName = localStorage.getItem('userName');
+
                 if (storedUserName) {
                     const firstName = storedUserName.split(' ')[0];
-                    setUserName(firstName); // Set user's first name
+                    setUserName(firstName); 
                 }
     
-                // Fetch the list of simulados for the user
+               
                 const responseSimulado = await fetch(`https://rvcurso.com.br/get.php?action=get_simulados_by_aluno&ID_aluno=${userID}`);
                 const simuladoData = await responseSimulado.json();
                 
-                // Map the simulado data into an array
+               
                 const simuladosData = simuladoData.simulado_IDs.map((id, index) => ({
                     id,
                     date: simuladoData.simulado_datas[index],
@@ -45,27 +47,29 @@ function Statistics() {
                 
                 let selectedSimulado;
     
-                // Check if a simulado was previously selected
+               
                 if (selectedSimuladoID) {
                     selectedSimulado = simuladosData.find(simulado => simulado.id === selectedSimuladoID);
                 }
                 
-                // If no simulado is selected or the selected one doesn't exist, use the last one
+                
                 if (!selectedSimulado) {
                     selectedSimulado = simuladosData[simuladosData.length - 1];
+                    localStorage.setItem('selectedSimuladoID', selectedSimulado.id);
                 }
                 
-                // Set the selected simulado date
+               
                 setSimuladoDate(selectedSimulado.date);
                 
-                // Fetch performance data
+               
                 const responsePerformance = await fetch(`https://rvcurso.com.br/get.php?action=getPerformance&ID_usuario=${userID}&ID_prova=${selectedSimulado.id}`);
                 const performanceData = await responsePerformance.json();
                 const performanceInfo = performanceData[0];
                 
-                // Set performance and total questions from performance data
+               
                 setPerformance(performanceInfo);
-                setTotalQuestions(Number(performanceInfo.n_questoes));  // Use n_questoes for total questions
+                setTotalQuestions(Number(performanceInfo.n_questoes));  
+                setNullQuestions(Number(performanceInfo.n_anuladas));  
                 
                 setLoading(false);
             } catch (error) {
@@ -77,16 +81,26 @@ function Statistics() {
         if (userID) {
             fetchSimuladoData();
         } else {
-            console.error('No userID found in localStorage.');
+            console.error('Nenhum userID encontrado no localStorage.');
         }
     }, [userID, selectedSimuladoID]);
 
     if (loading) {
-        return <div>Loading...</div>;  // Show a loading message until data is fetched
+        return <div className='page-container'>
+            <div className='menu'>
+                <Sidebar />
+            </div>
+            
+        </div> 
     }
 
     if (!performance) {
-        return <div>No performance data available.</div>;  // Message if no performance data is available
+        return <div className='page-container'>
+        <div className='menu'>
+            <Sidebar />
+        </div>
+        
+    </div>   
     }
 
     const { Notas, Acertos, Classificacao_geral, Classificacao_grupo } = performance;
@@ -108,18 +122,24 @@ function Statistics() {
                 </div>
 
                 <div className='card-container'>
-                    <div className='welcome-card'>
-                        <p className='welcome-message'>
-                            Classificação geral: <span className='placing'>{Classificacao_geral}º</span>
-                            <br /> Classificação do grupo: <span className='placing'>{Classificacao_grupo}º</span>
-                        </p>
-                        <LeaderboardOutlinedIcon className='icon' style={{ fontSize: 65 }} />
-                    </div>
+                    <Link to="/ranking" className='no-link-style'>
+                        <div className='welcome-card'>
+                            <p className='welcome-message'>
+                                Classificação geral: <span className='placing'>{Classificacao_geral}º</span>
+                                <br /> Classificação do grupo: <span className='placing'>{Classificacao_grupo}º</span>
+                            </p>
+                            <LeaderboardOutlinedIcon className='icon' style={{ fontSize: 65 }} />
+                        </div>
+                    </Link>
+
                     <InfoCard title="Média sem redação" info={roundToOneDecimal(Notas.Media_sem_redacao)} />
                     <InfoCard title="Média com redação" info={roundToOneDecimal(Notas.Media_com_redacao)} />
+
                 </div>
 
                 <div className='card-container'>
+
+
     {/* Card 1: Ciências Humanas e suas Tecnologias */}
     {isUnavailable(roundToOneDecimal(Notas.Ciencias_Humanas)) ? (
         <div className='unavailable'>
@@ -142,6 +162,7 @@ function Statistics() {
         </Link>
     )}
 
+
     {/* Card 3: Ciências da Natureza e suas Tecnologias */}
     {isUnavailable(roundToOneDecimal(Notas.Ciencias_Natureza)) ? (
         <div className='unavailable'>
@@ -152,6 +173,8 @@ function Statistics() {
             <Card title="Ciências da Natureza e suas Tecnologias" info={roundToOneDecimal(Notas.Ciencias_Natureza)} icon="bio" />
         </Link>
     )}
+
+
 
     {/* Card 4: Matemática e suas Tecnologias */}
     {isUnavailable(roundToOneDecimal(Notas.Matematica)) ? (
@@ -164,15 +187,17 @@ function Statistics() {
         </Link>
     )}
 
+
+
     {/* Card 5: Redação */}
     {isUnavailable(roundToOneDecimal(Notas.Redacao)) ? (
         <div className='unavailable'>
             <Card unavailable title="Redação" info={roundToOneDecimal(Notas.Redacao)} icon="create" />
         </div>
     ) : (
-        <Link to="/detalhes" state={{ expandedExam: 'R' }} className="no-link-style">
-            <Card title="Redação" info={roundToOneDecimal(Notas.Redacao)} icon="create" />
-        </Link>
+        // <Link to="/detalhes" state={{ expandedExam: 'R' }} className="no-link-style">
+            <Card title="Redação" info={roundToOneDecimal(Notas.Redacao)} icon="create"/>
+        // </Link>
     )}
 </div>
 
@@ -184,13 +209,18 @@ function Statistics() {
                         </div>
 
                         <div className='info'>
-                            <p className='card-info' style={{ color: '#ff6767' }}>{totalQuestions - Acertos}</p> {/* Subtract correct answers to get incorrect/nulos */}
+                            <p className='card-info' style={{ color: '#ff6767' }}>{totalQuestions - nullQuestions - Acertos}</p> {/* Subtract correct answers to get incorrect/nulos */}
                             <p className='card-title'>erros</p>
                         </div>
 
                         <div className='info'>
-                            <p className='card-info'>{totalQuestions}</p>  {/* Total number of questions */}
-                            <p className='card-title'>questões ao todo</p>
+                            <p className='card-info' style={{ color: '#909090' }}>{nullQuestions}</p>  
+                            <p className='card-title'>anuladas</p>
+                        </div>
+
+                        <div className='info'>
+                            <p className='card-info'>{totalQuestions}</p> 
+                            <p className='card-title'>total</p>
                         </div>
                     </div>
                 </div>

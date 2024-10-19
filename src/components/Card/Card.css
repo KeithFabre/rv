@@ -33,7 +33,8 @@
 }
 
 .card-redacao:hover {
-    box-shadow: 0 0 0 4px #336699 inset;
+    /* box-shadow: 0 0 0 4px #336699 inset; */
+    box-shadow: none;
 }
 
 /* Other existing styles remain unchanged */
