@@ -79,7 +79,7 @@ function Sidebar() {
 
           <li onClick={handleLogout}>
             <Link to="/login" className='logout'>
-                <LogoutOutlinedIcon style={{ color: '#fff', fontSize: 45 }} />
+                <LogoutOutlinedIcon style={{ color: '#fff', fontSize: 45 }} className='logout-icon'/>
             </Link>
         </li>
 

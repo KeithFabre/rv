@@ -3,8 +3,7 @@
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    margin-top: 20px;  /* tamanho sidebar */
+    align-items: center;
 
     flex-wrap: wrap;
 }
@@ -33,7 +32,8 @@ img.ranking-image {
 
 .rank-data {
     width: 40%;
-    margin-bottom: 20%;
+    /* margin-bottom: 20%; */
+    /* margin-top: -9%; */
 }
 
 .exam-rank {

@@ -133,9 +133,12 @@ input{
 }
 
 img.login-logo {
+
     width: 180px;
-    margin-top: 15%;
-    margin-bottom: 10px;
+
+    margin-top: 35px;
+    margin-bottom: 35px;
+
 }
 
 .login-container form {

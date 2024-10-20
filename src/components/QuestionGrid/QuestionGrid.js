@@ -63,7 +63,7 @@ const generateQuestions = async () => {
     const subjects = {};
     const availableQuestionsTemp = {};
     const hasVideoTemp = {};
-    const answersTemp = {};  // Store the correct answers (gabaritos)
+    const answersTemp = {}; 
 
     try {
         const userPerformanceResponse = await fetch(`https://rvcurso.com.br/get.php?action=getPerformance&ID_usuario=${userID}&ID_prova=${selectedSimulado}`);
@@ -74,13 +74,13 @@ const generateQuestions = async () => {
             return;
         }
 
-        setUserAnswers(userAnswers);  // Store student answers
+        setUserAnswers(userAnswers);  
 
-        // Fetch correct answers and subject information
+        
         const infoSimuladoResponse = await fetch(`https://rvcurso.com.br/get.php?action=get_info_simulado&ID_simulado=${selectedSimulado}`);
         const questionData = await infoSimuladoResponse.json();
 
-        // Process each question
+        
         for (let i = 91; i <= 180; i++) {
             const questionInfo = questionData[i.toString()];
             if (questionInfo) {
@@ -89,7 +89,7 @@ const generateQuestions = async () => {
                 subjects[i] = subject;
                 availableQuestionsTemp[i] = true;
                 hasVideoTemp[i] = videoAvailable;
-                answersTemp[i] = correctAnswer;  // Store the correct answer (gabarito)
+                answersTemp[i] = correctAnswer;  
 
                 const userAnswer = userAnswers[i.toString()];
                 status[i] = userAnswer === correctAnswer ? 'correct' : 'incorrect';
@@ -132,7 +132,7 @@ const generateQuestions = async () => {
     
 
     const handleQuestionClick = (index) => {
-        if (availableQuestions[index]) {  // Only allow clicking if the question is available
+        if (availableQuestions[index]) {  
             setSelectedQuestion(index);
             setIsCollapsed(false);
             fetchQuestionData(index);
@@ -180,10 +180,10 @@ const generateQuestions = async () => {
             end = 180;
         }
     
-        // Create an array of question numbers in chronological order
+        
         const questions = Array.from({ length: end - start + 1 }, (_, index) => start + index);
     
-        // Apply sorting based on the selected order, maintaining chronological order within groups
+        
         if (sortOrder === 'correct-first') {
             return questions.filter(q => questionStatus[q] === 'correct')
                             .concat(questions.filter(q => questionStatus[q] !== 'correct'));
@@ -192,7 +192,7 @@ const generateQuestions = async () => {
                             .concat(questions.filter(q => questionStatus[q] !== 'incorrect'));
         }
     
-        return questions; // Default to chronological order
+        return questions; 
     };
     
 
@@ -206,7 +206,7 @@ const generateQuestions = async () => {
         setActiveStatistic((prevStatistic) => (prevStatistic === type ? null : type));
     };
 
-    // Navigate to the next question
+    
     const handleNextQuestion = () => {
         const currentIndex = sortedQuestions.indexOf(selectedQuestion);
         if (currentIndex < sortedQuestions.length - 1) {
@@ -216,13 +216,13 @@ const generateQuestions = async () => {
         }
     };
 
-    // Navigate to the previous question
+    
     const handlePreviousQuestion = () => {
         const currentIndex = sortedQuestions.indexOf(selectedQuestion);
         if (currentIndex > 0) {
             const prevQuestion = sortedQuestions[currentIndex - 1];
             setSelectedQuestion(prevQuestion);
-            fetchQuestionData(prevQuestion); // Update the question data
+            fetchQuestionData(prevQuestion); 
         }
     };
 
@@ -469,7 +469,13 @@ Em suma, o miojo simboliza tanto as mudanças sociais e econômicas quanto os de
                                             {activeStatistic === 'Gabarito' && (
                                                 <div className='question-details-answer'>
                                                     {questionAnswer}
-                                                    <p className='comentario-gabarito'>{questionComentario}</p>    
+                                                    
+                                                    {questionComentario && (
+                                                        <div className='question-img-container gabarito'>
+                                                            <img src={`https://rvcurso.com.br/${questionComentario}`} className="question-img" />
+                                                        </div>
+                                                    ) }
+
                                                 </div>
                                             )}
 

@@ -126,7 +126,7 @@ function Statistics() {
                         <div className='welcome-card'>
                             <p className='welcome-message'>
                                 Classificação geral: <span className='placing'>{Classificacao_geral}º</span>
-                                <br /> Classificação do grupo: <span className='placing'>{Classificacao_grupo}º</span>
+                                {/* <br /> Classificação do grupo: <span className='placing'>{Classificacao_grupo}º</span> */}
                             </p>
                             <LeaderboardOutlinedIcon className='icon' style={{ fontSize: 65 }} />
                         </div>

@@ -68,7 +68,7 @@ function Ranking() {
                         )}
                     </div>
 
-                    <div className='divide-line'></div>
+                    {/* <div className='divide-line'></div>
 
                     <div className="ranking-details">
                         <div className='ranking-line'>
@@ -87,7 +87,7 @@ function Ranking() {
                         </div>
 
                         </div>
-                    </div>
+                    </div> */}
 
                 </div>
 

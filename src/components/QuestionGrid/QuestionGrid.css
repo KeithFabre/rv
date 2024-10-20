@@ -188,11 +188,16 @@
 .question-img-container {
     width: 100%;
     text-align: center;
+    /* margin-bottom: 2rem; */
+}
+
+.question-img-container.gabarito {
+    margin-top: 10px;
 }
 
 .question-img {
     height: 100%;
-    /* max-width: 100%; */
+    /* max-width: 500px; */
     width: 100%;
     /* max-height: 700px; */
 }

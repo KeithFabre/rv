@@ -50,7 +50,7 @@ function Perfil() {
                 </div>
             )} */}
                 <div className='user-info'>
-                    <h2>Olá, {userName}!</h2> 
+                    <h2 className='saludation-hey'>Olá, {userName}!</h2> 
                     <SaludationSvg className='saludation-svg profile'/>   
                 </div>
 

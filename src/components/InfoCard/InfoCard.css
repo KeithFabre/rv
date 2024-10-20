@@ -2,7 +2,7 @@
     border-radius: var(--card-radius);
     padding: 20px;
     text-align: center;
-    width: 330px; 
+    width: 328px; 
     height: 100px; /* deixar em % depois */
     margin: 0.5rem;
     background-color: var(--card-color);

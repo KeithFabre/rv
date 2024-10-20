@@ -109,3 +109,150 @@ h2 {
     color: var(--second-color);
 }
 
+/* iPad Pro visualização horizontal */
+@media only screen and (min-width: 1280px) and (max-width: 1366px) {
+    .page-container {
+        position: relative; 
+        overflow: hidden; 
+    }
+
+    .content,
+    .ranking-container {
+        transform: scale(1.2);
+        transform-origin: top left; 
+        width: calc(100% / 1.2); 
+        height: calc(100% / 1.2); 
+    }
+
+    .exam-history-container {
+        transform: scale(1.4);
+        transform-origin: top left; 
+        width: calc(100% / 1.4); 
+        height: calc(100% / 1.4);
+
+        margin-top: -25%;
+    }
+
+    .ranking-container {
+        margin-top: -10%;
+    }
+
+    .exam-history {
+        margin-left: -45%!important;
+    }
+
+
+    .sidebar-icon {
+        font-size: 55px!important;
+        margin-bottom: 4rem;
+    }
+
+    .logout-icon {
+        font-size: 55px!important;
+    }
+
+    .logo-image {
+        width: 120px;
+    }
+
+    .result-text {
+        font-size: 1.3rem;
+    }
+
+    .exam.dashboard-link {
+        font-size: 1.2rem;
+    }
+
+    .ranking {
+        margin-left: -16%!important;
+    }
+
+    .rank-data {
+        width: 20%!important;
+        margin-top: -200px;
+    }
+
+
+    .page-container {
+        grid-template-columns: 220px 1fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "menu content";
+        height: 100%;
+        width: 100%;
+    }
+
+    
+}
+
+
+/* iPad Pro 3rd Gen (Horizontal) */
+/* @media only screen and (min-width: 2048px) and (max-width: 2732px) {
+    .page-container {
+        position: relative; 
+        overflow: hidden; 
+    }
+
+    .content,
+    .ranking-container {
+        transform: scale(2);
+        transform-origin: top left; 
+        width: calc(100% / 2); 
+        height: calc(100% / 2); 
+    }
+
+    .exam-history-container {
+        transform: scale(1.4);
+        transform-origin: top left; 
+        width: calc(100% / 1.4); 
+        height: calc(100% / 1.4);
+
+        margin-top: -25%;
+    }
+
+    .ranking-container {
+        margin-top: -10%;
+    }
+
+    .exam-history {
+        margin-left: -45%!important;
+    }
+
+
+    .sidebar-icon {
+        font-size: 55px!important;
+        margin-bottom: 4rem;
+    }
+
+    .logout-icon {
+        font-size: 55px!important;
+    }
+
+    .logo-image {
+        width: 120px;
+    }
+
+    .result-text {
+        font-size: 1.3rem;
+    }
+
+    .exam.dashboard-link {
+        font-size: 1.2rem;
+    }
+
+    .ranking {
+        margin-left: -20%!important;
+    }
+
+    .rank-data {
+        width: 20%!important;
+    }
+
+
+    .page-container {
+        grid-template-columns: 220px 1fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "menu content";
+        height: 100%;
+        width: 100%;
+    }
+} */
