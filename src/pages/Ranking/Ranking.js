@@ -1,52 +1,133 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../../components/Sidebar/Sidebar'; 
-import './Ranking.css'; 
+import Sidebar from '../../components/Sidebar/Sidebar';
+import './Ranking.css';
 
 function Ranking() {
-    const [rankingImage, setRankingImage] = useState(null); // State to store the image URL
-    const [loading, setLoading] = useState(true); // State to manage loading state
-    const [error, setError] = useState(null); // State to manage errors
+    const [rankingImage, setRankingImage] = useState(null);
+    const [rankingData, setRankingData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Fetch the ranking image URL on component mount
+    const userID = localStorage.getItem('userID'); // Retrieve user ID
+
     useEffect(() => {
-        const fetchRankingImage = async () => {
+        const fetchRankingData = async () => {
             try {
-                const response = await fetch('https://rvcurso.com.br/get.php?action=get_top_ranking');
-                const data = await response.json();
+                const [rankingImageResponse, rankingDataResponse] = await Promise.all([
+                    fetch('https://rvcurso.com.br/get.php?action=get_top_ranking'),
+                    fetch(`https://rvcurso.com.br/get.php?action=get_ranking&ID_aluno=${userID}`)
+                ]);
 
-                if (data.link_top_ranking) {
-                    setRankingImage(data.link_top_ranking);
+                const rankingImageData = await rankingImageResponse.json();
+                const ranking = await rankingDataResponse.json();
+
+                if (rankingImageData.link_top_ranking) {
+                    setRankingImage(rankingImageData.link_top_ranking);
                 } else {
                     throw new Error('Ranking image not found');
                 }
+
+                setRankingData(ranking);
             } catch (err) {
                 setError(err.message);
-                console.error('Error fetching ranking image:', err);
+                console.error('Error fetching ranking data:', err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchRankingImage();
-    }, []);
+        fetchRankingData();
+    }, [userID]);
 
-    return (
-        <div className='page-container profile'>
+    if (loading) {
+        return <div className='page-container'>
             <div className='menu'>
                 <Sidebar />
             </div>
-            <div className='ranking-container'>
-                {loading ? (
-                    <div> </div>
-                ) : error ? (
-                    console.log(error)
-                ) : (
-                    <div className='ranking-image-container'>
-                        <img 
-                            src={rankingImage} 
-                            alt="Top Ranking" 
-                            className='ranking-image'
-                        />
+            
+        </div> 
+    }
+
+    if (error) console.log(error)
+
+    return (
+        <div className="page-container profile">
+            <div className="menu">
+                <Sidebar />
+            </div>
+
+            <div className="ranking-container">
+                <div className="ranking">
+                    <div className="ranking-image-container">
+                        {rankingImage && (
+                            <img 
+                                src={rankingImage} 
+                                alt="Top Ranking" 
+                                className="ranking-image"
+                            />
+                        )}
+                    </div>
+
+                    <div className='divide-line'></div>
+
+                    <div className="ranking-details">
+                        <div className='ranking-line'>
+                            <div className="posicao-circle">
+                                <p>{rankingData.posicao}</p>
+                            </div>
+                        <div className="ranking-entry">
+                            <div className="rank-content">
+                                <div className="rank-values">
+                                <p className="nome">{rankingData.nome}</p>
+                                    <p>{rankingData.posicao_natureza} | {rankingData.nota_naturezas}</p>
+                                    <p>{rankingData.posicao_matematica} | {rankingData.nota_matematica}</p>
+                                    <p>{rankingData.nota_geral}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                {rankingData && (
+                    <div className="rank-data">
+                        <div className="exam-rank">
+                            <div className="prova-rank">
+                                <p>Naturezas</p>
+                            </div>
+                            <div className="nota-rank">
+                                <p>{rankingData.nota_naturezas}</p>
+                            </div>
+                            <div className="posicao-rank">
+                                <p>{rankingData.posicao_natureza} posição</p>
+                            </div>
+                        </div>
+
+                        <div className="exam-rank">
+                            <div className="prova-rank">
+                                <p>Matemática</p>
+                            </div>
+                            <div className="nota-rank">
+                                <p>{rankingData.nota_matematica}</p>
+                            </div>
+                            <div className="posicao-rank">
+                                <p>{rankingData.posicao_matematica} posição</p>
+                            </div>
+                        </div>
+
+                        <div className="exam-rank">
+                            <div className="prova-rank">
+                                <p>Média TRI-RV</p>
+                            </div>
+                            <div className="nota-rank">
+                                <p>{rankingData.nota_geral}</p>
+                            </div>
+                            <div className="posicao-rank">
+                                <p>{rankingData.posicao} posição</p>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
