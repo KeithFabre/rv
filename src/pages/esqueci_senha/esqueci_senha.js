@@ -1,5 +1,5 @@
 import React from 'react';
-import './EsqueciSenha.css'
+import './esqueci_senha.css'
 import { Link } from 'react-router-dom';
 import logo from '../../assets/230616_RV_logo_principal_positivo-cor.png';
 

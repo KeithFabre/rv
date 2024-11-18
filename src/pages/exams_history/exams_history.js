@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../../components/Sidebar/Sidebar';
+import Sidebar from '../../components/base/Sidebar/Sidebar';
 import { Link } from 'react-router-dom';
-import './ExamsHistory.css';
+import './exams_history.css';
 
 function ExamHistory() {
     

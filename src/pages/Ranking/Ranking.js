@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../../components/Sidebar/Sidebar';
-import './Ranking.css';
+import Sidebar from '../../components/base/Sidebar/Sidebar';
+import './ranking.css';
 
 function Ranking() {
     const [rankingImage, setRankingImage] = useState(null);
@@ -8,7 +8,7 @@ function Ranking() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const userID = localStorage.getItem('userID'); // Retrieve user ID
+    const userID = localStorage.getItem('userID'); 
 
     useEffect(() => {
         const fetchRankingData = async () => {

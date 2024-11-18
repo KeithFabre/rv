@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import Sidebar from '../../components/Sidebar/Sidebar';
-import QuestionGrid from '../../components/QuestionGrid/QuestionGrid';
+import Sidebar from '../../components/base/Sidebar/Sidebar';
+import QuestionGrid from '../../components/base/QuestionGrid/QuestionGrid';
 
 function ExamDetails() {
     const location = useLocation();

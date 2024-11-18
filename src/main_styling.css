@@ -1,0 +1,13 @@
+:root {
+    --background-color: #f4f3ed;
+    --sidebar-color: #5fbec4;
+    --icon-color: #000;
+    --card-color: #fff;
+    --details-color: #5fbec4;
+    --second-color: #362191;
+    --font-color: #242828;
+    --disabled-button-color: #e0e0e0;
+    --card-radius: 10px;
+    --items-radius: 5px;
+    --card-hover: 0 0 0 3px #5fbec4 inset;
+}

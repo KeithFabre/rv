@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './Statistics.css';
-import Sidebar from '../../components/Sidebar/Sidebar';
+import './statistics.css';
+import Sidebar from '../../components/base/Sidebar/Sidebar';
 import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
-import Card from '../../components/Card/Card';
-import InfoCard from '../../components/InfoCard/InfoCard';
+import Card from '../../components/base/Card/Card';
+import InfoCard from '../../components/base/InfoCard/InfoCard';
 
 function Statistics() {
     const [performance, setPerformance] = useState(null);

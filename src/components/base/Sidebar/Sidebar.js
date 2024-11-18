@@ -5,7 +5,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
-import logo from '../../assets/230616_RV_logo_restrito_negativo-branco.png';
+import logo from '../../../assets/230616_RV_logo_restrito_negativo-branco.png';
 
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import SignalCellularAltOutlinedIcon from '@mui/icons-material/SignalCellularAltOutlined';
@@ -25,11 +25,10 @@ function Sidebar() {
     }, []);
 
 
-    // melhorar isso aqui
     const handleLogout = () => {
-      // Clear localStorage
+      // limpa o localStorage sempre que faz o logout
       localStorage.clear();
-      // Redirect to login page
+      // redireciona pra página de login
       navigate('/login');
     };
 

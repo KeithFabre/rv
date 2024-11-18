@@ -1,20 +1,7 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap'); */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import './main_styling.css';
 
-:root {
-    --background-color: #f4f3ed;
-    --sidebar-color: #5fbec4;
-    --icon-color: #000;
-    --card-color: #fff;
-    --details-color: #5fbec4;
-    --second-color: #362191;
-    --font-color: #242828;
-    --disabled-button-color: #e0e0e0;
-    --card-radius: 10px;
-    --items-radius: 5px;
-    --card-hover: 0 0 0 3px #5fbec4 inset;
-    /* font-sizes */
-}
 
 html, body, #root {
     height: 100%;
@@ -124,13 +111,21 @@ h2 {
         height: calc(100% / 1.2); 
     }
 
+    .content.questions {
+        transform: scale(1.1);
+        transform-origin: top left; 
+        width: calc(100% / 1.1); 
+        height: calc(100% / 1.1); 
+    }
+
     .exam-history-container {
         transform: scale(1.4);
         transform-origin: top left; 
         width: calc(100% / 1.4); 
         height: calc(100% / 1.4);
 
-        margin-top: -25%;
+        margin-top: 25%;
+        margin-left: 50px;
     }
 
     .ranking-container {

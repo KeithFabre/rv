@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import './Login.css';
+import './login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/230616_RV_logo_principal_positivo-cor.png';
 
 function Login() {
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const navigate = useNavigate(); // To programmatically navigate after login
+    const navigate = useNavigate(); // navega após o login
 
     const handleLogin = async (e) => {
-        e.preventDefault(); // Prevent form submission from reloading the page
+        e.preventDefault(); // não deixa a submissão recarregar a página
 
 
         try {
@@ -22,11 +23,10 @@ function Login() {
             console.log(data)
 
             if (data.status === 0) {
-                // Store ID and name in localStorage
+                // guarda nome e id no localStorage
                 localStorage.setItem('userID', data.ID_usuario);
                 localStorage.setItem('userName', data.nome);
 
-                // Login successful, navigate to the profile page
                 // coloquei / por enquanto, depois voltar pra /perfil 
                 // quando mandar pra /perfil ele vai contar uns segundos e depois
                 // redirecionar pro /

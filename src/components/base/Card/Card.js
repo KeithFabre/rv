@@ -44,7 +44,7 @@ function Card({ title, info, icon, unavailable }) {
         return title;
     };
 
-    // Determine the card class based on the icon type and unavailable status
+    // Determina a classe do cartão dependendo do que é passado
     const cardClass = () => {
         let baseClass = 'card';
         switch (icon) {
@@ -66,7 +66,7 @@ function Card({ title, info, icon, unavailable }) {
             default:
                 break;
         }
-        // Add unavailable class if the unavailable prop is true
+        // Adiciona a classe unavailable se não tiver a propriedade
         if (unavailable) {
             baseClass += ' unavailable';
         }

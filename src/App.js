@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 
-import Statistics from './pages/Statistics/Statistics';
-import ExamDetails from './pages/ExamDetails/ExamDetails';
+import Statistics from './pages/statistics/statistics';
+import ExamDetails from './pages/exam_details/exam_details';
 import './App.css';
-import ExamHistory from './pages/ExamsHistory/ExamsHistory';
-import Login from './pages/Login/Login';
-import Cadastro from './pages/Cadastro/Cadastro';
-import EsqueciSenha from './pages/EsqueciSenha/EsqueciSenha';
-import Perfil from './pages/Perfil/Perfil';
-import Ranking from './pages/Ranking/Ranking';
+import ExamHistory from './pages/exams_history/exams_history';
+import Login from './pages/login/login';
+import Cadastro from './pages/cadastro/cadastro';
+import EsqueciSenha from './pages/esqueci_senha/esqueci_senha';
+import Perfil from './pages/perfil/perfil';
+import Ranking from './pages/ranking/ranking';
 
 const ProtectedRoutes = ({ children }) => {
     const navigate = useNavigate();

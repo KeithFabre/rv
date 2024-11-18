@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../../components/Sidebar/Sidebar';
+import Sidebar from '../../components/base/Sidebar/Sidebar';
 import { Link } from 'react-router-dom';
-import './Perfil.css';
+import './perfil.css';
 
 import { ReactComponent as SaludationSvg } from '../../assets/saludation.svg';
 
