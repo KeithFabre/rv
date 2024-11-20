@@ -9,7 +9,6 @@ html, body, #root {
     margin: 0; 
     padding: 0;
     background-color: var(--background-color);
-    /* font-family: 'Poppins', sans-serif; */
     font-family: "Space Grotesk", sans-serif;
 }
 
